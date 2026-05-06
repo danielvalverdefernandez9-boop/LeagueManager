@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<connection>
+    <server>localhost</server>
+    <port>3307</port>
+    <dataBase>nombre_tu_bd</dataBase>
+    <user>usuario_db</user>
+    <password>password_db</password>
+</connection>
