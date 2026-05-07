@@ -2,60 +2,135 @@ package DAO;
 
 import dataAccess.ConnectionBD;
 import model.Equipo;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EquipoDAO implements DAO<Equipo> {
+public class EquipoDAO implements DAO<Equipo, String> {
 
     private Connection con;
 
     public EquipoDAO() {
-        // Obtenemos la conexión del Singleton que ya tienes
-        this.con = ConnectionBD.getInstance().getCon();
+
+        con = ConnectionBD
+                .getInstance()
+                .getCon();
     }
 
     @Override
     public boolean insertar(Equipo equipo) {
-        String sql = "INSERT INTO Equipo (nombre, ciudad, estadio, fecha_fundacion) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, equipo.getNombre());
-            ps.setString(2, equipo.getCiudad());
-            ps.setString(3, equipo.getEstadio());
-            ps.setDate(4, Date.valueOf(equipo.getFecha_fundacion())); // Conversión LocalDate a SQL Date
 
-            return ps.executeUpdate() > 0;
+        String sql =
+                "INSERT INTO Equipo " +
+                        "(nombre, ciudad, estadio, fecha_fundacion) " +
+                        "VALUES (?, ?, ?, ?)";
+
+        try {
+
+            PreparedStatement ps =
+                    con.prepareStatement(sql);
+
+            ps.setString(1, equipo.getNombre());
+
+            ps.setString(2, equipo.getCiudad());
+
+            ps.setString(3, equipo.getEstadio());
+
+            ps.setDate(4, Date.valueOf(equipo.getFecha_fundacion())
+            );
+
+            ps.executeUpdate();
+
+            return true;
+
         } catch (SQLException e) {
+
             e.printStackTrace();
+
             return false;
         }
     }
 
     @Override
     public List<Equipo> listarTodos() {
-        ArrayList<Equipo> lista = new ArrayList<>(); // Estilo Autor: uso de ArrayList[cite: 1]
+
+        List<Equipo> equipos =
+                new ArrayList<>();
+
         String sql = "SELECT * FROM Equipo";
 
-        try (Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+        try {
+
+            Statement st =
+                    con.createStatement();
+
+            ResultSet rs =
+                    st.executeQuery(sql);
 
             while (rs.next()) {
-                Equipo e = new Equipo(
-                        rs.getString("nombre"),
-                        rs.getString("ciudad"),
-                        rs.getString("estadio"),
-                        rs.getDate("fecha_fundacion").toLocalDate()
+
+                Equipo equipo =
+                        new Equipo();
+
+                equipo.setNombre(
+                        rs.getString("nombre")
                 );
-                lista.add(e);
+
+                equipo.setCiudad(
+                        rs.getString("ciudad")
+                );
+
+                equipo.setEstadio(rs.getString("estadio")
+                );
+
+                equipo.setFecha_fundacion(rs.getDate("fecha_fundacion")
+                                .toLocalDate()
+                );
+
+                equipos.add(equipo);
             }
+
         } catch (SQLException e) {
+
             e.printStackTrace();
         }
-        return lista;
+
+        return equipos;
     }
 
-    // Los métodos actualizar, eliminar y buscarPorId seguirían una lógica similar...
-    @Override public boolean actualizar(Equipo objeto) { return false; }
-    @Override public boolean eliminar(Equipo objeto) { return false; }
-    @Override public Equipo buscarPorId(Object id) { return null; }
+    @Override
+    public boolean eliminar(String nombre) {
+
+        String sql =
+                "DELETE FROM Equipo WHERE nombre = ?";
+
+        try {
+
+            PreparedStatement ps =
+                    con.prepareStatement(sql);
+
+            ps.setString(1, nombre);
+
+            ps.executeUpdate();
+
+            return true;
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    @Override
+    public boolean actualizar(Equipo obj) {
+        return false;
+    }
+
+    @Override
+    public Equipo buscarPorId(String s) {
+        return null;
+    }
 }

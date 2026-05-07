@@ -5,21 +5,21 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionBD {
-    private final String FILE = "connection.html";
+    private final String FILE = "connection.xml";
     private Connection con;
     private ConnectionProperties properties;
-    //1. crear una instancia de la propia clase
     private static ConnectionBD _instance;
 
     //2. Constructor privado
     private ConnectionBD() {
-        //leo del connection.xml los datos para la conexion
+
         properties = XMLManager.readXML(new ConnectionProperties(), FILE);
     }
 
     public void connect() throws SQLException {
         try{
             con = DriverManager.getConnection(properties.getURL(), properties.getUser(), properties.getPassword());
+
         }catch(SQLException e){
             con=null;
             e.printStackTrace();
