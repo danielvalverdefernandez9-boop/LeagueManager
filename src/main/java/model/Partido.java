@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Partido {
+
     private int id_partido;
     private LocalDate fecha;
     private int goles_local;
@@ -12,18 +13,33 @@ public class Partido {
 
     private Competicion competicion;
 
+    // NUEVOS ATRIBUTOS
+    private Equipo equipoLocal;
+    private Equipo equipoVisitante;
+
     private List<Equipo> equipos;
 
     public Partido() {
         equipos = new ArrayList<>();
     }
 
-    public Partido(int id_partido, LocalDate fecha, int goles_local, int goles_visitante, Competicion competicion) {
+    // CONSTRUCTOR COMPLETO
+    public Partido(int id_partido,
+                   LocalDate fecha,
+                   int goles_local,
+                   int goles_visitante,
+                   Equipo equipoLocal,
+                   Equipo equipoVisitante,
+                   Competicion competicion) {
 
         this.id_partido = id_partido;
         this.fecha = fecha;
         this.goles_local = goles_local;
         this.goles_visitante = goles_visitante;
+
+        this.equipoLocal = equipoLocal;
+        this.equipoVisitante = equipoVisitante;
+
         this.competicion = competicion;
 
         equipos = new ArrayList<>();
@@ -71,6 +87,22 @@ public class Partido {
         this.competicion = competicion;
     }
 
+    public Equipo getEquipoLocal() {
+        return equipoLocal;
+    }
+
+    public void setEquipoLocal(Equipo equipoLocal) {
+        this.equipoLocal = equipoLocal;
+    }
+
+    public Equipo getEquipoVisitante() {
+        return equipoVisitante;
+    }
+
+    public void setEquipoVisitante(Equipo equipoVisitante) {
+        this.equipoVisitante = equipoVisitante;
+    }
+
     public List<Equipo> getEquipos() {
         return equipos;
     }
@@ -81,6 +113,18 @@ public class Partido {
 
     @Override
     public String toString() {
-        return "Partido " + id_partido;
+
+        String local = (equipoLocal != null) ? equipoLocal.getNombre() : "Local";
+        String visitante = (equipoVisitante != null) ? equipoVisitante.getNombre() : "Visitante";
+
+        return local + " " +
+                goles_local +
+                "-" +
+                goles_visitante +
+                " " +
+                visitante +
+                " [" +
+                competicion.getNombre() +
+                "]";
     }
 }

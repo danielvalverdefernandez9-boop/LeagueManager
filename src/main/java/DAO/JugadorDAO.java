@@ -8,9 +8,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JugadorDAO implements DAO<Jugador, String> {
+public class JugadorDAO {
 
-    @Override
     public boolean insertar(Jugador j) {
 
         String sql = "INSERT INTO Jugador (dni, nombre, edad, posicion, dorsal, equipo_nombre) VALUES (?, ?, ?, ?, ?, ?)";
@@ -35,7 +34,6 @@ public class JugadorDAO implements DAO<Jugador, String> {
         }
     }
 
-    @Override
     public boolean actualizar(Jugador j) {
 
         String sql = "UPDATE Jugador SET nombre=?, edad=?, posicion=?, dorsal=?, equipo_nombre=? WHERE dni=?";
@@ -57,7 +55,6 @@ public class JugadorDAO implements DAO<Jugador, String> {
         }
     }
 
-    @Override
     public boolean eliminar(String dni) {
 
         String sql = "DELETE FROM Jugador WHERE dni=?";
@@ -74,7 +71,6 @@ public class JugadorDAO implements DAO<Jugador, String> {
         }
     }
 
-    @Override
     public Jugador buscarPorId(String dni) {
 
         String sql = "SELECT j.*, e.nombre AS eq_nombre, e.ciudad, e.estadio, e.fecha_fundacion " +
@@ -120,7 +116,6 @@ public class JugadorDAO implements DAO<Jugador, String> {
         return null;
     }
 
-    @Override
     public List<Jugador> listarTodos() {
 
         List<Jugador> lista = new ArrayList<>();
@@ -164,7 +159,6 @@ public class JugadorDAO implements DAO<Jugador, String> {
         return lista;
     }
 
-    // 🔥 EXTRA: jugadores por equipo (muy típico en examen)
     public List<Jugador> buscarPorEquipo(String nombreEquipo) {
 
         List<Jugador> lista = new ArrayList<>();

@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EquipoDAO implements DAO<Equipo, String> {
+public class EquipoDAO{
 
     private Connection con;
 
@@ -18,7 +18,6 @@ public class EquipoDAO implements DAO<Equipo, String> {
                 .getCon();
     }
 
-    @Override
     public boolean insertar(Equipo equipo) {
 
         String sql =
@@ -51,8 +50,6 @@ public class EquipoDAO implements DAO<Equipo, String> {
             return false;
         }
     }
-
-    @Override
     public List<Equipo> listarTodos() {
 
         List<Equipo> equipos =
@@ -99,7 +96,6 @@ public class EquipoDAO implements DAO<Equipo, String> {
         return equipos;
     }
 
-    @Override
     public boolean eliminar(String nombre) {
 
         String sql =
@@ -107,8 +103,7 @@ public class EquipoDAO implements DAO<Equipo, String> {
 
         try {
 
-            PreparedStatement ps =
-                    con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, nombre);
 
@@ -124,13 +119,4 @@ public class EquipoDAO implements DAO<Equipo, String> {
         }
     }
 
-    @Override
-    public boolean actualizar(Equipo obj) {
-        return false;
-    }
-
-    @Override
-    public Equipo buscarPorId(String s) {
-        return null;
-    }
 }
