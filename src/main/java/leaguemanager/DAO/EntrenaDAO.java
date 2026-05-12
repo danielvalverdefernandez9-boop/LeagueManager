@@ -1,6 +1,6 @@
-package DAO;
+package leaguemanager.DAO;
 
-import dataAccess.ConnectionBD;
+import leaguemanager.dataAccess.ConnectionBD;
 import java.sql.*;
 
 public class EntrenaDAO {

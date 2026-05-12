@@ -1,7 +1,7 @@
-package DAO;
+package leaguemanager.DAO;
 
-import dataAccess.ConnectionBD;
-import model.Competicion;
+import leaguemanager.dataAccess.ConnectionBD;
+import leaguemanager.model.Competicion;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

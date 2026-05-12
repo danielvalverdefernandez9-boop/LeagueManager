@@ -1,4 +1,4 @@
-package dataAccess;
+package leaguemanager.dataAccess;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

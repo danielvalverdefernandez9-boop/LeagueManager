@@ -1,8 +1,7 @@
-package DAO;
+package leaguemanager.DAO;
 
-import dataAccess.ConnectionBD;
-import model.Equipo;
-import model.Competicion;
+import leaguemanager.dataAccess.ConnectionBD;
+
 import java.sql.*;
 
 public class ParticipaDAO {

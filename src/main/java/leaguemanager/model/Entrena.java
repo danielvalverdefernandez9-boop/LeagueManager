@@ -1,4 +1,4 @@
-package model;
+package leaguemanager.model;
 
 public class Entrena {
 
@@ -11,7 +11,7 @@ public class Entrena {
     public Entrena() {
     }
 
-    public Entrena(Entrenador entrenador, Equipo equipo, String temporada) {
+    public Entrena(leaguemanager.model.Entrenador entrenador, Equipo equipo, String temporada) {
 
         this.entrenador = entrenador;
         this.equipo = equipo;
@@ -20,11 +20,11 @@ public class Entrena {
 
     // GETTERS Y SETTERS
 
-    public Entrenador getEntrenador() {
+    public leaguemanager.model.Entrenador getEntrenador() {
         return entrenador;
     }
 
-    public void setEntrenador(Entrenador entrenador) {
+    public void setEntrenador(leaguemanager.model.Entrenador entrenador) {
         this.entrenador = entrenador;
     }
 

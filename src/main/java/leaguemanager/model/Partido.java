@@ -1,4 +1,4 @@
-package model;
+package leaguemanager.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

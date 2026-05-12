@@ -1,20 +1,11 @@
-import DAO.*;
-import dataAccess.ConnectionBD;
-import model.*;
-import DAO.EquipoDAO;
-import DAO.JugadorDAO;
-import DAO.PartidoDAO;
-import DAO.CompeticionDAO;
-import dataAccess.ConnectionBD;
-import model.Competicion;
-import model.Equipo;
-import model.Jugador;
-import model.Partido;
-import java.sql.SQLException;
+package leaguemanager;
 
-import java.time.LocalDate;
+import leaguemanager.DAO.*;
+import leaguemanager.dataAccess.ConnectionBD;
+import leaguemanager.model.*;
 
 import java.sql.SQLException;
+
 import java.time.LocalDate;
 
 public class Main {

@@ -1,4 +1,4 @@
-package model;
+package leaguemanager.model;
 
 public class Competicion {
 

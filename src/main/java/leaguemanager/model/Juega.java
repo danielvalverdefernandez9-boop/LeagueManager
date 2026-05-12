@@ -1,4 +1,4 @@
-package model;
+package leaguemanager.model;
 
 public class Juega {
 
@@ -8,7 +8,7 @@ public class Juega {
 
     public Juega() {}
 
-    public Juega(Equipo equipo, Partido partido) {
+    public Juega(Equipo equipo, leaguemanager.model.Partido partido) {
 
         this.equipo = equipo;
         this.partido = partido;
@@ -24,11 +24,11 @@ public class Juega {
         this.equipo = equipo;
     }
 
-    public Partido getPartido() {
+    public leaguemanager.model.Partido getPartido() {
         return partido;
     }
 
-    public void setPartido(Partido partido) {
+    public void setPartido(leaguemanager.model.Partido partido) {
         this.partido = partido;
     }
 }

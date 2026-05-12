@@ -1,4 +1,4 @@
-package dataAccess;
+package leaguemanager.dataAccess;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

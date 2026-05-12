@@ -1,4 +1,5 @@
-package model;
+package leaguemanager.model;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -64,11 +65,11 @@ public class Equipo {
         this.fecha_fundacion = fecha_fundacion;
     }
 
-    public List<Jugador> getJugadores() {
+    public List<leaguemanager.model.Jugador> getJugadores() {
         return jugadores;
     }
 
-    public void setJugadores(List<Jugador> jugadores) {
+    public void setJugadores(List<leaguemanager.model.Jugador> jugadores) {
         this.jugadores = jugadores;
     }
 
