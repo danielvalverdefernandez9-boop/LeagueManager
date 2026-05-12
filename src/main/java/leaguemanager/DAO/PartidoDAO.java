@@ -50,7 +50,7 @@ public class PartidoDAO {
 
         List<Partido> lista = new ArrayList<>();
 
-        String sql = "SELECT p.*, c.numero_equipos " +
+        String sql = "SELECT p.*, c.numero_equipos, c.temporada " +
                 "FROM Partido p " +
                 "JOIN Competicion c ON p.competicion_nombre = c.nombre";
 
@@ -61,7 +61,8 @@ public class PartidoDAO {
 
                 Competicion comp = new Competicion(
                         rs.getString("competicion_nombre"),
-                        rs.getInt("numero_equipos")
+                        rs.getInt("numero_equipos"),
+                        rs.getString("temporada")
                 );
 
                 Equipo local = new Equipo();
@@ -93,7 +94,7 @@ public class PartidoDAO {
     // BUSCAR PARTIDO POR ID
     public Partido buscarPorId(int id) {
 
-        String sql = "SELECT p.*, c.numero_equipos " +
+        String sql = "SELECT p.*, c.numero_equipos, c.temporada " +
                 "FROM Partido p " +
                 "JOIN Competicion c ON p.competicion_nombre = c.nombre " +
                 "WHERE p.id_partido = ?";
@@ -108,7 +109,8 @@ public class PartidoDAO {
 
                 Competicion comp = new Competicion(
                         rs.getString("competicion_nombre"),
-                        rs.getInt("numero_equipos")
+                        rs.getInt("numero_equipos"),
+                        rs.getString("temporada")
                 );
 
                 Equipo local = new Equipo();

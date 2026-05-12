@@ -39,12 +39,12 @@ public class Main {
             jugadorDAO.insertar(jugador2);
 
             // 5. Crear competición
-            Competicion laliga = new Competicion("LaLiga", 20);
+            Competicion Champions = new Competicion("Champions", 20,"25/26");
             System.out.println("Insertando competición...");
-            competicionDAO.insertar(laliga);
+            competicionDAO.insertar(Champions);
 
             // 6. Crear partido (ID 1)
-            Partido partido = new Partido(1, LocalDate.now(), 3, 1, barcelona, madrid, laliga);
+            Partido partido = new Partido(2, LocalDate.now(), 2, 0, barcelona, madrid,Champions);
             System.out.println("Insertando partido...");
             partidoDAO.insertar(partido);
 

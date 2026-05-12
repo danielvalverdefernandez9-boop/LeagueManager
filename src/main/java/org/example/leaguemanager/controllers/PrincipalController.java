@@ -1,4 +1,4 @@
-package org.example.leaguemanager;
+package org.example.leaguemanager.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +15,8 @@ public class PrincipalController {
     private void crearCompeticion(ActionEvent event) {
         try {
             // Cargamos la vista del formulario (Pantalla 2 de tu dibujo)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("crear-competicion.fxml"));
+            // Prueba con esta ruta completa desde la raíz de resources
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/leaguemanager/crearCompeticion.fxml"));
             Parent root = loader.load();
 
             // Obtenemos la ventana actual

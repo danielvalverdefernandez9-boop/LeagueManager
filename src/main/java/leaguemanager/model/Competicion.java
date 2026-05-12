@@ -4,13 +4,15 @@ public class Competicion {
 
     private String nombre;
     private int numero_equipos;
+    private String temporada;
 
     public Competicion() {
     }
 
-    public Competicion(String nombre, int numeroEquipos) {
+    public Competicion(String nombre, int numeroEquipos, String temporada) {
         this.nombre = nombre;
         this.numero_equipos = numeroEquipos;
+        this.temporada = temporada;
     }
 
     // GETTERS Y SETTERS
@@ -31,8 +33,16 @@ public class Competicion {
         this.numero_equipos = numero_equipos;
     }
 
+    public String getTemporada() {
+        return temporada;
+    }
+
+    public void setTemporada(String temporada) {
+        this.temporada = temporada;
+    }
+
     @Override
     public String toString() {
-        return nombre;
+        return nombre + " - " + numero_equipos+ " - " + temporada;
     }
 }

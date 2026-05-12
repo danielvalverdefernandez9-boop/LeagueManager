@@ -12,9 +12,9 @@ public class LeagueManagerAPP extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(LeagueManagerAPP.class.getResource("principal.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(LeagueManagerAPP.class.getResource("/leaguemanager/principal.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 900, 700);
 
         // Añadir BootstrapFX
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
