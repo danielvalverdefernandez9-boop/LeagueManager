@@ -8,6 +8,8 @@ module leaguemanager {
 
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
+    requires javafx.base;
+    requires javafx.graphics;
 
     opens leaguemanager to javafx.fxml;
     exports leaguemanager;

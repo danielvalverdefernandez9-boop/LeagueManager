@@ -3,6 +3,7 @@ package leaguemanager.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Partido {
 
@@ -126,5 +127,17 @@ public class Partido {
                 " [" +
                 competicion.getNombre() +
                 "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Partido partido = (Partido) o;
+        return id_partido == partido.id_partido && goles_local == partido.goles_local && goles_visitante == partido.goles_visitante && Objects.equals(fecha, partido.fecha) && Objects.equals(competicion, partido.competicion) && Objects.equals(equipoLocal, partido.equipoLocal) && Objects.equals(equipoVisitante, partido.equipoVisitante) && Objects.equals(equipos, partido.equipos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id_partido, fecha, goles_local, goles_visitante, competicion, equipoLocal, equipoVisitante, equipos);
     }
 }

@@ -42,7 +42,7 @@ public class CrearCompeticionController {
     }
 
     @FXML
-    private void continuarEquipos(ActionEvent event) {
+    private void guardar(ActionEvent event) {
         try {
             // 1. Validamos que no haya campos vacíos
             if (nombre.getText().isEmpty() || temporada.getText().isEmpty() || numero_equipos.getText().isEmpty()) {
@@ -79,6 +79,21 @@ public class CrearCompeticionController {
             mostrarAlerta("Error de datos", "En 'Nº equipos' debes introducir un número entero.");
         }
     }
+    @FXML
+    private void continuarEquipos(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/leaguemanager/equipos.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo regresar.");
+            e.printStackTrace();
+        }
+    }
+
 
     // Método auxiliar para mostrar errores de forma visual
     private void mostrarAlerta(String titulo, String contenido) {

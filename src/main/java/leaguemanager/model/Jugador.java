@@ -1,5 +1,7 @@
 package leaguemanager.model;
 
+import java.util.Objects;
+
 public class Jugador extends Persona implements Validable {
 
     private String posicion;
@@ -50,5 +52,17 @@ public class Jugador extends Persona implements Validable {
     @Override
     public String toString() {
         return nombre + " - " + posicion;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Jugador jugador = (Jugador) o;
+        return dorsal == jugador.dorsal && Objects.equals(posicion, jugador.posicion) && Objects.equals(equipo, jugador.equipo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(posicion, dorsal, equipo);
     }
 }

@@ -4,6 +4,7 @@ package leaguemanager.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Equipo {
 
@@ -76,5 +77,17 @@ public class Equipo {
     @Override
     public String toString() {
         return nombre;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Equipo equipo = (Equipo) o;
+        return Objects.equals(nombre, equipo.nombre) && Objects.equals(ciudad, equipo.ciudad) && Objects.equals(estadio, equipo.estadio) && Objects.equals(fecha_fundacion, equipo.fecha_fundacion) && Objects.equals(jugadores, equipo.jugadores);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre, ciudad, estadio, fecha_fundacion, jugadores);
     }
 }

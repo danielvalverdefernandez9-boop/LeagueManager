@@ -9,8 +9,10 @@ public class Entrenador extends Persona {
         super(dni, nombre, edad);
     }
 
+
     @Override
     public String toString() {
         return nombre + " - Entrenador";
     }
+
 }

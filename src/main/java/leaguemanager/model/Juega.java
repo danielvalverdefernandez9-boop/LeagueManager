@@ -1,5 +1,7 @@
 package leaguemanager.model;
 
+import java.util.Objects;
+
 public class Juega {
 
     private Equipo equipo;
@@ -30,5 +32,17 @@ public class Juega {
 
     public void setPartido(leaguemanager.model.Partido partido) {
         this.partido = partido;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Juega juega = (Juega) o;
+        return Objects.equals(equipo, juega.equipo) && Objects.equals(partido, juega.partido);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(equipo, partido);
     }
 }

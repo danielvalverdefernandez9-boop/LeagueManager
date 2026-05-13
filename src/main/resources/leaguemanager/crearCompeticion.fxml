@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -12,11 +13,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.leaguemanager.controllers.CrearCompeticionController">
    <children>
-      <VBox alignment="CENTER" layoutX="36.0" layoutY="123.0" prefHeight="218.0" prefWidth="481.0" spacing="30.0">
+      <VBox alignment="CENTER" layoutX="36.0" layoutY="123.0" prefHeight="218.0" prefWidth="551.0" spacing="30.0">
          <children>
             <GridPane alignment="CENTER" hgap="10.0" vgap="10.0">
               <columnConstraints>
@@ -29,33 +31,65 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Nombre de la competición:" />
+                  <Label text="Nombre de la competición:">
+                     <font>
+                        <Font name="Javanese Text" size="20.0" />
+                     </font></Label>
                   <TextField fx:id="nombre" onAction="#volverMenu" GridPane.columnIndex="1" />
                   <TextField fx:id="temporada" text="25/26" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="numero_equipos" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="Temporada" GridPane.rowIndex="1" />
-                  <Label prefHeight="18.0" prefWidth="102.0" text="Nº de equipos" GridPane.rowIndex="2" />
+                  <Label text="Temporada:" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="Javanese Text" size="20.0" />
+                     </font></Label>
+                  <Label prefHeight="56.0" prefWidth="137.0" text="Nº de equipos" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="Javanese Text" size="20.0" />
+                     </font></Label>
                </children>
                <padding>
                   <Insets top="20.0" />
                </padding>
             </GridPane>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+            <HBox alignment="CENTER" prefHeight="56.0" prefWidth="551.0" spacing="40.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#volverMenu" styleClass="btn-danger" text="Volver al inicio" />
-                  <Button mnemonicParsing="false" onAction="#continuarEquipos" text="Guardar y continuar" />
+                  <Button graphicTextGap="6.0" mnemonicParsing="false" onAction="#volverMenu" style="-fx-background-color: #e67e22;" styleClass="btn-danger" text="Volver al inicio" textFill="#a5e1ff">
+                     <effect>
+                        <DropShadow>
+                           <color>
+                              <Color opacity="0.4000000059604645" />
+                           </color>
+                        </DropShadow>
+                     </effect></Button>
+                  <Button mnemonicParsing="false" onAction="#guardar" style="-fx-background-color: #e67e22;" text="Guardar" textFill="#a5e1ff">
+                     <effect>
+                        <DropShadow>
+                           <color>
+                              <Color opacity="0.4000000059604645" />
+                           </color>
+                        </DropShadow>
+                     </effect></Button>
+                  <Button graphicTextGap="6.0" layoutX="189.0" layoutY="25.0" mnemonicParsing="false" onAction="#continuarEquipos" style="-fx-background-color: #e67e22;" styleClass="btn-danger" text="Continuar" textFill="#a5e1ff">
+                     <effect>
+                        <DropShadow>
+                           <color>
+                              <Color opacity="0.4000000059604645" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </Button>
                </children>
             </HBox>
          </children>
       </VBox>
-      <Label layoutX="61.0" layoutY="36.0" prefHeight="62.0" prefWidth="200.0" text="CREAR COMPETICIÓN">
+      <Label layoutX="28.0" layoutY="47.0" prefHeight="62.0" prefWidth="257.0" text="CREAR COMPETICIÓN" textOverrun="WORD_ELLIPSIS">
          <font>
-            <Font size="20.0" />
+            <Font name="Lucida Console" size="20.0" />
          </font>
       </Label>
-      <ImageView fitHeight="109.0" fitWidth="174.0" layoutX="470.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="132.0" fitWidth="216.0" layoutX="422.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../Downloads/logo.png" />
+            <Image url="@logo.png" />
          </image>
       </ImageView>
    </children>

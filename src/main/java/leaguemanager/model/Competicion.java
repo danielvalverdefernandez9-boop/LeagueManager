@@ -1,5 +1,7 @@
 package leaguemanager.model;
 
+import java.util.Objects;
+
 public class Competicion {
 
     private String nombre;
@@ -44,5 +46,17 @@ public class Competicion {
     @Override
     public String toString() {
         return nombre + " - " + numero_equipos+ " - " + temporada;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Competicion that = (Competicion) o;
+        return numero_equipos == that.numero_equipos && Objects.equals(nombre, that.nombre) && Objects.equals(temporada, that.temporada);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre, numero_equipos, temporada);
     }
 }
