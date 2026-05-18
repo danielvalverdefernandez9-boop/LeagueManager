@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="550.0" style="-fx-background-color: white; -fx-border-color: #3498db; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.leaguemanager.controllers.FichaEquipoController">
+    <children>
+        <!-- Botón Volver (Flecha del dibujo) -->
+        <Button layoutX="14.0" layoutY="14.0" onAction="#volver" style="-fx-background-color: transparent; -fx-cursor: hand;" text="← Volver" textFill="#3498db">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+        </Button>
+
+        <VBox alignment="CENTER_LEFT" layoutX="47.199999999999996" layoutY="65.0" prefHeight="246.0" prefWidth="238.0" spacing="20.0" AnchorPane.leftAnchor="45.0">
+            <children>
+                <Label fx:id="lblNombreEquipo" text="FICHA DE EQUIPO" textFill="#2c3e50">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+
+                <Button mnemonicParsing="false" onAction="#irAJugadores" prefHeight="45.0" prefWidth="220.0" style="-fx-background-color: #3498db; -fx-cursor: hand;" text="JUGADORES" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                    <effect>
+                        <DropShadow height="5.0" radius="2.0" width="5.0" />
+                    </effect>
+                </Button>
+
+                <Button mnemonicParsing="false" onAction="#irAEntrenador" prefHeight="45.0" prefWidth="220.0" style="-fx-background-color: #3498db; -fx-cursor: hand;" text="ENTRENADOR" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Button>
+            </children>
+        </VBox>
+
+        <!-- Recuadro para el Escudo (Derecha en el dibujo) -->
+        <ImageView fx:id="imgEscudo" fitHeight="150.0" fitWidth="150.0" layoutX="340.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="60.0">
+            <image>
+                <Image url="@logo.png" />
+            </image>
+        </ImageView>
+    </children>
+</AnchorPane>

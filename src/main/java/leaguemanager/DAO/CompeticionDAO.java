@@ -11,9 +11,17 @@ public class CompeticionDAO {
     private Connection con;
 
     public CompeticionDAO() {
+        /* Inicializamos la conexión utilizando el Singleton de la base de datos */
         con = ConnectionBD.getInstance().getCon();
     }
 
+    /**
+     * Método que registra una nueva competición en la base de datos almacenando su nombre,
+     * el número máximo de equipos y la temporada correspondiente.
+     *
+     * @param c objeto Competicion que contiene la información a persistir
+     * @return true si la inserción fue exitosa, false en caso de error de SQL
+     */
     public boolean insertar(Competicion c) {
         String sql = "INSERT INTO Competicion (nombre, numero_equipos, temporada) VALUES (?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -28,6 +36,13 @@ public class CompeticionDAO {
         }
     }
 
+    /**
+     * Método de búsqueda que recupera la información detallada de una competición
+     * específica a partir de su nombre único.
+     *
+     * @param nombre nombre identificador de la competición a localizar
+     * @return objeto Competicion si se encuentra en la base de datos, o null si no existe
+     */
     public Competicion buscarPorNombre(String nombre) {
         String sql = "SELECT * FROM Competicion WHERE nombre = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -50,6 +65,12 @@ public class CompeticionDAO {
         return null;
     }
 
+    /**
+     * Versión que devuelve una lista con todas las competiciones almacenadas en la
+     * tabla Competicion de la base de datos.
+     *
+     * @return lista con todos los objetos Competicion registrados
+     */
     public List<Competicion> listarTodas() {
         List<Competicion> lista = new ArrayList<>();
 

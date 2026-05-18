@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: white; -fx-border-color: #e74c3c; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.leaguemanager.controllers.JugadoresController">
+    <children>
+
+        <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0" spacing="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <children>
+                <Button onAction="#volver" style="-fx-background-color: transparent; -fx-cursor: hand;" text="←" textFill="#e74c3c">
+                    <font><Font name="System Bold" size="20.0" /></font>
+                </Button>
+                <Label text="GESTIÓN DE JUGADORES" textFill="#e74c3c">
+                    <font><Font name="System Bold" size="24.0" /></font>
+                </Label>
+            </children>
+        </HBox>
+
+        <HBox layoutX="20.0" layoutY="80.0" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="80.0">
+            <children>
+                <!-- Tabla de Jugadores -->
+                <TableView fx:id="tablaJugadores" prefWidth="450.0" HBox.hgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colDorsal" prefWidth="50.0" text="Nº" />
+                        <TableColumn fx:id="colNombre" prefWidth="200.0" text="Nombre" />
+                        <TableColumn fx:id="colPosicion" prefWidth="150.0" text="Posición" />
+                    </columns>
+                </TableView>
+
+                <!-- Panel de Botones Laterales -->
+                <VBox prefWidth="180.0" spacing="15.0">
+                    <children>
+                        <Button maxWidth="Infinity" onAction="#nuevoJugador" style="-fx-background-color: #e74c3c;" text="NUEVO JUGADOR" textFill="WHITE">
+                            <font><Font name="System Bold" size="13.0" /></font>
+                        </Button>
+                        <Button maxWidth="Infinity" onAction="#eliminarSeleccionado" style="-fx-background-color: #c0392b;" text="ELIMINAR" textFill="WHITE">
+                            <font><Font name="System Bold" size="13.0" /></font>
+                        </Button>
+                        <Separator prefWidth="200.0" />
+                        <Label text="Información Equipo:" textFill="#7f8c8d">
+                            <font><Font name="System Italic" size="12.0" /></font>
+                        </Label>
+                        <Label fx:id="lblNombreEquipo" text="Equipo Seleccionado" wrapText="true">
+                            <font><Font name="System Bold" size="14.0" /></font>
+                        </Label>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

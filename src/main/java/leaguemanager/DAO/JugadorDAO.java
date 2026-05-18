@@ -10,42 +10,34 @@ import java.util.List;
 
 public class JugadorDAO {
 
-    public boolean insertar(Jugador j) {
+    private final Connection con;
 
-        String sql = "INSERT INTO Jugador (dni, nombre, edad, posicion, dorsal, equipo_nombre) VALUES (?, ?, ?, ?, ?, ?)";
-
-        Connection con = ConnectionBD.getInstance().getCon();
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, j.getDni());
-            ps.setString(2, j.getNombre());
-            ps.setInt(3, j.getEdad());
-            ps.setString(4, j.getPosicion());
-            ps.setInt(5, j.getDorsal());
-            ps.setString(6, j.getEquipo().getNombre());
-
-            return ps.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-            return false;
-        }
+    public JugadorDAO() {
+        // Inicializar conexión mediante Singleton
+        con = ConnectionBD.getInstance().getCon();
     }
+    /**
+     * Inserta un nuevo jugador en la base de datos.
+     *
+     * @param jugador objeto Jugador a insertar
+     * @return true si se insertó correctamente
+     */
+    public boolean insertar(Jugador jugador) {
 
-    public boolean actualizar(Jugador j) {
+        String sql = """
+                INSERT INTO Jugador
+                (dni, nombre, edad, posicion, dorsal, equipo_nombre)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """;
 
-        String sql = "UPDATE Jugador SET nombre=?, edad=?, posicion=?, dorsal=?, equipo_nombre=? WHERE dni=?";
-        Connection con = ConnectionBD.getInstance().getCon();
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, j.getNombre());
-            ps.setInt(2, j.getEdad());
-            ps.setString(3, j.getPosicion());
-            ps.setInt(4, j.getDorsal());
-            ps.setString(5, j.getEquipo().getNombre());
-            ps.setString(6, j.getDni());
+            ps.setString(1, jugador.getDni());
+            ps.setString(2, jugador.getNombre());
+            ps.setInt(3, jugador.getEdad());
+            ps.setString(4, jugador.getPosicion());
+            ps.setInt(5, jugador.getDorsal());
+            ps.setString(6, jugador.getEquipo().getNombre());
 
             return ps.executeUpdate() > 0;
 
@@ -55,10 +47,51 @@ public class JugadorDAO {
         }
     }
 
+    /**
+     * Actualiza los datos de un jugador existente.
+     *
+     * @param jugador jugador con datos actualizados
+     * @return true si se actualizó correctamente
+     */
+    public boolean actualizar(Jugador jugador) {
+
+        String sql = """
+                UPDATE Jugador
+                SET nombre = ?,
+                    edad = ?,
+                    posicion = ?,
+                    dorsal = ?,
+                    equipo_nombre = ?
+                WHERE dni = ?
+                """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, jugador.getNombre());
+            ps.setInt(2, jugador.getEdad());
+            ps.setString(3, jugador.getPosicion());
+            ps.setInt(4, jugador.getDorsal());
+            ps.setString(5, jugador.getEquipo().getNombre());
+            ps.setString(6, jugador.getDni());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Elimina un jugador por su DNI.
+     *
+     * @param dni DNI del jugador
+     * @return true si se eliminó correctamente
+     */
     public boolean eliminar(String dni) {
 
-        String sql = "DELETE FROM Jugador WHERE dni=?";
-        Connection con = ConnectionBD.getInstance().getCon();
+        String sql = "DELETE FROM Jugador WHERE dni = ?";
+
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, dni);
@@ -71,13 +104,27 @@ public class JugadorDAO {
         }
     }
 
+    /**
+     * Busca un jugador por su DNI.
+     *
+     * @param dni DNI del jugador
+     * @return objeto Jugador o null si no existe
+     */
     public Jugador buscarPorId(String dni) {
 
-        String sql = "SELECT j.*, e.nombre AS eq_nombre, e.ciudad, e.estadio, e.fecha_fundacion " +
-                "FROM Jugador j " +
-                "LEFT JOIN Equipo e ON j.equipo_nombre = e.nombre " +
-                "WHERE j.dni=?";
-        Connection con = ConnectionBD.getInstance().getCon();
+        String sql = """
+                SELECT
+                    j.*,
+                    e.nombre AS eq_nombre,
+                    e.ciudad,
+                    e.estadio,
+                    e.fecha_fundacion
+                FROM Jugador j
+                LEFT JOIN Equipo e
+                    ON j.equipo_nombre = e.nombre
+                WHERE j.dni = ?
+                """;
+
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, dni);
@@ -88,11 +135,10 @@ public class JugadorDAO {
 
                 Equipo equipo = null;
 
-                String nombreEq = rs.getString("eq_nombre");
+                if (rs.getString("eq_nombre") != null) {
 
-                if (nombreEq != null) {
                     equipo = new Equipo(
-                            nombreEq,
+                            rs.getString("eq_nombre"),
                             rs.getString("ciudad"),
                             rs.getString("estadio"),
                             rs.getDate("fecha_fundacion").toLocalDate()
@@ -116,14 +162,24 @@ public class JugadorDAO {
         return null;
     }
 
+    /**
+     * Lista todos los jugadores.
+     *
+     * @return lista de jugadores
+     */
     public List<Jugador> listarTodos() {
 
-        List<Jugador> lista = new ArrayList<>();
+        List<Jugador> jugadores = new ArrayList<>();
 
-        String sql = "SELECT j.*, e.nombre AS eq_nombre " +
-                "FROM Jugador j " +
-                "LEFT JOIN Equipo e ON j.equipo_nombre = e.nombre";
-        Connection con = ConnectionBD.getInstance().getCon();
+        String sql = """
+                SELECT
+                    j.*,
+                    e.nombre AS eq_nombre
+                FROM Jugador j
+                LEFT JOIN Equipo e
+                    ON j.equipo_nombre = e.nombre
+                """;
+
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
@@ -140,7 +196,7 @@ public class JugadorDAO {
                     );
                 }
 
-                Jugador j = new Jugador(
+                Jugador jugador = new Jugador(
                         rs.getString("dni"),
                         rs.getString("nombre"),
                         rs.getInt("edad"),
@@ -149,22 +205,32 @@ public class JugadorDAO {
                         equipo
                 );
 
-                lista.add(j);
+                jugadores.add(jugador);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return lista;
+        return jugadores;
     }
 
+    /**
+     * Busca jugadores pertenecientes a un equipo.
+     *
+     * @param nombreEquipo nombre del equipo
+     * @return lista de jugadores
+     */
     public List<Jugador> buscarPorEquipo(String nombreEquipo) {
 
-        List<Jugador> lista = new ArrayList<>();
+        List<Jugador> jugadores = new ArrayList<>();
 
-        String sql = "SELECT * FROM Jugador WHERE equipo_nombre=?";
-        Connection con = ConnectionBD.getInstance().getCon();
+        String sql = """
+                SELECT *
+                FROM Jugador
+                WHERE equipo_nombre = ?
+                """;
+
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, nombreEquipo);
@@ -173,22 +239,60 @@ public class JugadorDAO {
 
             while (rs.next()) {
 
-                Equipo equipo = new Equipo(nombreEquipo, null, null, null);
+                Equipo equipo = new Equipo(
+                        nombreEquipo,
+                        null,
+                        null,
+                        null
+                );
 
-                lista.add(new Jugador(
+                Jugador jugador = new Jugador(
                         rs.getString("dni"),
                         rs.getString("nombre"),
                         rs.getInt("edad"),
                         rs.getString("posicion"),
                         rs.getInt("dorsal"),
                         equipo
-                ));
+                );
+
+                jugadores.add(jugador);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return lista;
+        return jugadores;
+    }
+
+    /**
+     * Cuenta el número de jugadores de un equipo.
+     *
+     * @param nombreEquipo nombre del equipo
+     * @return total de jugadores
+     */
+    public int contarPorEquipo(String nombreEquipo) {
+
+        String sql = """
+                SELECT COUNT(*) AS total
+                FROM Jugador
+                WHERE equipo_nombre = ?
+                """;
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nombreEquipo);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 }

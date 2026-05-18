@@ -14,10 +14,17 @@ public class PartidoDAO {
     private Connection con;
 
     public PartidoDAO() {
+        /* Obtenemos la conexión activa desde nuestro Singleton ConnectionBD */
         con = ConnectionBD.getInstance().getCon();
     }
 
-    // INSERTAR PARTIDO
+    /**
+     * Método que registra un nuevo partido en la base de datos almacenando sus goles,
+     * fecha y los nombres de los equipos y la competición vinculados.
+     *
+     * @param p objeto Partido que contiene toda la información a insertar
+     * @return true si el registro se insertó correctamente, false en caso de error
+     */
     public boolean insertar(Partido p) {
 
         String sql = "INSERT INTO Partido " +
@@ -45,7 +52,12 @@ public class PartidoDAO {
         }
     }
 
-    // LISTAR TODOS LOS PARTIDOS
+    /**
+     * Versión que devuelve una lista completa de los partidos almacenados, realizando un JOIN
+     * con la tabla Competicion para obtener los datos básicos del torneo.
+     *
+     * @return lista de todos los partidos encontrados en la base de datos
+     */
     public List<Partido> listarTodos() {
 
         List<Partido> lista = new ArrayList<>();
@@ -91,7 +103,13 @@ public class PartidoDAO {
         return lista;
     }
 
-    // BUSCAR PARTIDO POR ID
+    /**
+     * Método de búsqueda que recupera la información detallada de un partido específico
+     * a partir de su identificador único.
+     *
+     * @param id identificador numérico del partido a buscar
+     * @return objeto Partido si se encuentra en la base de datos, o null si no existe
+     */
     public Partido buscarPorId(int id) {
 
         String sql = "SELECT p.*, c.numero_equipos, c.temporada " +

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="450.0" prefWidth="320.0" spacing="15.0" style="-fx-background-color: white; -fx-border-color: #e74c3c; -fx-border-width: 2; -fx-background-radius: 10; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.leaguemanager.controllers.AnadirJugadoresController">
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="15" />
+    </padding>
+    <children>
+        <HBox alignment="TOP_LEFT">
+            <children>
+                <Button onAction="#volver" style="-fx-background-color: transparent; -fx-text-fill: #7f8c8d; -fx-cursor: hand;" text="← Volver" />
+            </children>
+        </HBox>
+
+        <Label text="NUEVO JUGADOR" textFill="#e74c3c">
+            <font>
+                <Font name="System Bold" size="20" />
+            </font>
+        </Label>
+
+        <TextField fx:id="txtDni" maxWidth="220" promptText="DNI" />
+        <TextField fx:id="txtNombre" maxWidth="220" promptText="Nombre del jugador" />
+        <TextField fx:id="txtEdad" maxWidth="220" promptText="Edad" />
+        <TextField fx:id="txtDorsal" maxWidth="220" promptText="Dorsal" />
+
+        <ComboBox fx:id="comboPosicion" maxWidth="220.0" prefWidth="220.0" promptText="Selecciona Posición" style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 5;" />
+
+        <Button mnemonicParsing="false" onAction="#guardar" prefWidth="120.0" style="-fx-background-color: #e74c3c; -fx-background-radius: 8; -fx-cursor: hand;" text="GUARDAR" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="14" />
+            </font>
+        </Button>
+    </children>
+</VBox>

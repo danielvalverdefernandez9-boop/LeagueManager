@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -12,66 +14,40 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.leaguemanager.controllers.EquiposController">
-   <children>
-      <AnchorPane layoutX="21.0" layoutY="29.0" prefHeight="342.0" prefWidth="564.0">
-         <children>
-            <Label layoutX="232.0" layoutY="24.0" prefHeight="35.0" prefWidth="100.0" text="EQUIPOS" underline="true">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            <VBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="71.0" prefHeight="214.0" prefWidth="138.0" spacing="20.0">
-               <children>
-                  <Button graphicTextGap="6.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" style="-fx-background-color: #e67e22;" styleClass="btn-danger" text="Crear equipo" textFill="#a5e1ff">
-                     <effect>
-                        <DropShadow>
-                           <color>
-                              <Color opacity="0.4000000059604645" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                  </Button>
-                  <Button graphicTextGap="6.0" mnemonicParsing="false" onAction="#insertarEquipos" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #e67e22;" styleClass="btn-danger" text="Insertar equipos" textFill="#a5e1ff">
-                     <effect>
-                        <DropShadow>
-                           <color>
-                              <Color opacity="0.4000000059604645" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                  </Button>
-                  <Button graphicTextGap="6.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="122.0" style="-fx-background-color: #e67e22;" styleClass="btn-danger" text="Eliminar equipos" textFill="#a5e1ff">
-                     <effect>
-                        <DropShadow>
-                           <color>
-                              <Color opacity="0.4000000059604645" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                  </Button>
-               </children>
-               <padding>
-                  <Insets top="15.0" />
-               </padding>
-            </VBox>
-            <ImageView fitHeight="225.0" fitWidth="398.0" layoutX="183.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@logo.png" />
-               </image>
-               <effect>
-                  <DropShadow />
-               </effect>
-            </ImageView>
-         </children>
-      </AnchorPane>
-      <Button graphicTextGap="6.0" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#volverMenu" style="-fx-background-color: #e67e22;" styleClass="btn-danger" text="Volver al inicio" textFill="#a5e1ff">
-         <effect>
-            <DropShadow>
-               <color>
-                  <Color opacity="0.4000000059604645" />
-               </color>
-            </DropShadow>
-         </effect>
-      </Button>
-   </children>
+    <children>
+        <AnchorPane layoutX="21.0" layoutY="29.0" prefHeight="342.0" prefWidth="564.0">
+            <children>
+                <Label layoutX="232.0" layoutY="14.0" prefHeight="35.0" prefWidth="100.0" text="EQUIPOS" underline="true">
+                    <font>
+                        <Font size="24.0" />
+                    </font>
+                </Label>
+
+                <VBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="71.0" prefHeight="214.0" prefWidth="138.0" spacing="20.0">
+                    <children>
+                        <Button onAction="#crearEquipo" prefHeight="30.0" prefWidth="118.0" style="-fx-background-color: #e67e22;" text="Crear equipo" textFill="#a5e1ff" />
+                        <Button onAction="#insertarEquipos" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #e67e22;" text="Insertar equipos" textFill="#a5e1ff" />
+                        <Button onAction="#eliminarEquipos" prefHeight="34.0" prefWidth="122.0" style="-fx-background-color: #e67e22;" text="Eliminar equipos" textFill="#a5e1ff" />
+                    </children>
+                </VBox>
+
+                <!-- Esta tabla permitirá seleccionar el equipo para evitar el error NULL -->
+                <TableView fx:id="tablaEquiposDisponibles" layoutX="175.0" layoutY="71.0" prefHeight="200.0" prefWidth="365.0">
+                    <columns>
+                        <TableColumn fx:id="colNombre" prefWidth="363.0" text="Nombre del Equipo" />
+                    </columns>
+                </TableView>
+
+                <Button layoutX="227.0" layoutY="292.0" mnemonicParsing="false" onAction="#continuarJugadores" prefHeight="35.0" prefWidth="110.0" style="-fx-background-color: #e67e22;" text="Continuar" textFill="WHITE">
+                    <font><Font name="System Bold" size="13.0" /></font>
+                    <effect><DropShadow /></effect>
+                </Button>
+
+                <ImageView fitHeight="60.0" fitWidth="120.0" layoutX="430.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                    <image><Image url="@logo.png" /></image>
+                </ImageView>
+            </children>
+        </AnchorPane>
+        <Button layoutX="10.0" layoutY="10.0" onAction="#volverMenu" style="-fx-background-color: #e67e22;" text="Volver al inicio" textFill="#a5e1ff" />
+    </children>
 </AnchorPane>

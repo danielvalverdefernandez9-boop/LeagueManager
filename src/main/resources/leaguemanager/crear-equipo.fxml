@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="358.0" prefWidth="389.0" spacing="20.0" style="-fx-background-color: white; -fx-border-color: #f39c12; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.leaguemanager.controllers.CrearEquipoController">
+    <children>
+        <Label text="NUEVO EQUIPO" textFill="#f39c12">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+
+        <GridPane hgap="10.0" vgap="15.0">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <!-- CAMBIADO: fx:id de txtNombre a nombre -->
+                <TextField fx:id="nombre" promptText="Ej: Real Madrid" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label text="Ciudad:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <!-- CAMBIADO: fx:id de txtCiudad a ciudad -->
+                <TextField fx:id="ciudad" promptText="Ej: Madrid" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label text="Estadio:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <!-- CAMBIADO: fx:id de txtEstadio a estadio -->
+                <TextField fx:id="estadio" promptText="Ej: Santiago Bernabéu" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <Label text="Fundación:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <!-- CAMBIADO: fx:id de dpFechaFundacion a fecha_fundacion -->
+                <DatePicker fx:id="fecha_fundacion" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            </children>
+            <VBox.margin>
+                <Insets left="20.0" right="30.0" />
+            </VBox.margin>
+        </GridPane>
+
+        <HBox alignment="CENTER" spacing="20.0">
+            <children>
+            <Button onAction="#volver" style="-fx-background-color: transparent; -fx-cursor: hand;" text="← Volver" textFill="#3498db">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+                <Button mnemonicParsing="false" onAction="#guardarNuevoEquipo" style="-fx-background-color: #f39c12;" text="Guardar Equipo" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#cancelar" style="-fx-background-color: #7f8c8d;" text="Cancelar" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="30.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+</VBox>

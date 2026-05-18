@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import leaguemanager.DAO.EquipoDAO;
 import leaguemanager.DAO.ParticipaDAO;
 import leaguemanager.model.Equipo;
-
+import leaguemanager.utils.Utils;
 import java.util.List;
 
 public class SelectorEquiposController {
@@ -25,24 +25,16 @@ public class SelectorEquiposController {
     private final EquipoDAO equipoDAO = new EquipoDAO();
     private final ParticipaDAO participaDAO = new ParticipaDAO();
 
-    /**
-     * Inicializa los datos de la ventana.
-     * Se debe llamar justo después de cargar el FXML.
-     */
     public void initData(String nombreComp) {
         this.nombreCompeticion = nombreComp;
-
-        // 1. Configurar la columna para que lea el atributo "nombre" del modelo Equipo
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-
-        // 2. Habilitar la SELECCIÓN MÚLTIPLE en la tabla
         tablaEquiposDisponibles.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        cargarEquiposDesdeBD();
 
-        // 3. Cargar los equipos desde la base de datos
-        cargarEquipos();
+        System.out.println("DEBUG: Selector listo para la competición: [" + nombreCompeticion + "]");
     }
 
-    private void cargarEquipos() {
+    private void cargarEquiposDesdeBD() {
         List<Equipo> lista = equipoDAO.listarTodos();
         if (lista != null) {
             tablaEquiposDisponibles.setItems(FXCollections.observableArrayList(lista));
@@ -51,35 +43,54 @@ public class SelectorEquiposController {
 
     @FXML
     private void insertarSeleccionados(ActionEvent event) {
-        // Obtener los elementos seleccionados por el usuario con el cursor
         ObservableList<Equipo> seleccionados = tablaEquiposDisponibles.getSelectionModel().getSelectedItems();
 
         if (seleccionados.isEmpty()) {
-            System.out.println("No se ha seleccionado ningún equipo.");
+            Utils.mostrarAlerta("Sin selección", "Selecciona al menos un equipo.");
             return;
         }
 
-        // Insertar cada relación en la tabla Participa
+        boolean huboError = false;
+        int insertados = 0;
+
         for (Equipo equipo : seleccionados) {
             boolean exito = participaDAO.vincularEquipoACompeticion(equipo.getNombre(), nombreCompeticion);
             if (exito) {
-                System.out.println("Vinculado: " + equipo.getNombre());
+                insertados++;
             } else {
-                System.err.println("Error o duplicado al vincular: " + equipo.getNombre());
+                huboError = true;
+                Utils.mostrarAlerta("Error de Vinculación",
+                        "No se pudo añadir el equipo: " + equipo.getNombre() +
+                                ". Verifique que la competición '" + nombreCompeticion + "' existe.");
+                break;
             }
         }
 
-        // Cerrar la ventana actual
-        cerrarVentana(event);
+        if (insertados > 0 && !huboError) {
+            Utils.mostrarMensaje("Éxito", "Todos los equipos se han inscrito correctamente.");
+            // CERRAMOS LA VENTANA AL TERMINAR: Así volvemos a la pantalla principal de Equipos
+            cerrarVentana(event);
+        }
     }
 
     @FXML
     private void cancelar(ActionEvent event) {
+        // En lugar de limpiar, si el usuario cancela, cerramos la ventanita
         cerrarVentana(event);
     }
 
+    @FXML
+    private void volver(ActionEvent event) {
+        // IMPORTANTE: Eliminamos Utils.cambiarEscena para no perder la competición del padre
+        cerrarVentana(event);
+    }
+
+    /**
+     * Método auxiliar para cerrar esta ventana sin destruir la de Equipos
+     */
     private void cerrarVentana(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
     }
 }

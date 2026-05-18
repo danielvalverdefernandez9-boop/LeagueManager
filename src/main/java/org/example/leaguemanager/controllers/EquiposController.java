@@ -1,94 +1,95 @@
 package org.example.leaguemanager.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import leaguemanager.DAO.EquipoDAO;
 import leaguemanager.DAO.ParticipaDAO;
 import leaguemanager.model.Competicion;
 import leaguemanager.model.Equipo;
-
+import leaguemanager.utils.Utils;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class EquiposController {
 
-    private Competicion competicionActiva;
-    private EquipoDAO equipoDAO = new EquipoDAO();
-    private ParticipaDAO participaDAO = new ParticipaDAO();
+    @FXML private TableView<Equipo> tablaEquiposDisponibles;
+    @FXML private TableColumn<Equipo, String> colNombre;
 
-    // Método para recibir la competición de la pantalla anterior
+    private Competicion competicionActiva;
+    private final ParticipaDAO participaDAO = new ParticipaDAO();
+
+    public void setCompeticion(Competicion c) {
+        this.competicionActiva = c;
+        if (colNombre != null) {
+            colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        }
+        cargarDatosTabla();
+    }
+
+    private void cargarDatosTabla() {
+        if (competicionActiva != null && tablaEquiposDisponibles != null) {
+            List<Equipo> listaActualizada = participaDAO.obtenerEquiposPorCompeticion(competicionActiva.getNombre());
+            tablaEquiposDisponibles.setItems(FXCollections.observableArrayList(listaActualizada));
+        }
+    }
+
     @FXML
-    private void volverMenu(ActionEvent event) {
+    private void continuarJugadores(ActionEvent event) {
+        if (competicionActiva == null) {
+            Utils.mostrarAlerta("Error", "No hay competición seleccionada.");
+            return;
+        }
+
+        Equipo seleccionado = tablaEquiposDisponibles.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            Utils.mostrarAlerta("Atención", "Selecciona un equipo de la tabla.");
+            return;
+        }
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/leaguemanager/principal.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/leaguemanager/ficha-equipo.fxml"));
             Parent root = loader.load();
+
+            FichaEquipoController controller = loader.getController();
+            // PASAMOS EQUIPO Y COMPETICIÓN
+            controller.init(seleccionado.getNombre(), this.competicionActiva);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            mostrarAlerta("Error", "No se pudo regresar al menú principal.");
             e.printStackTrace();
         }
     }
-    public void setCompeticion(Competicion c) {
-        this.competicionActiva = c;
-        System.out.println("Gestionando equipos para: " + c.getNombre());
-    }
 
-    @FXML
-    private void crearEquipo() {
-        // Aquí abriríamos una ventanita pequeña para nombre y ciudad del equipo
-        System.out.println("Abriendo formulario de creación de equipo nuevo...");
-    }
-
-    @FXML
-    private void insertarEquipos(ActionEvent event) {
+    private void abrirVentanaEmergente(String fxml, String titulo, int modo) {
         try {
-            // 1. Cargar el FXML de la nueva ventana
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/leaguemanager/selector_equipos.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
+            if (modo == 1) ((SelectorEquiposController) loader.getController()).initData(competicionActiva.getNombre());
+            if (modo == 2) ((CrearEquipoController) loader.getController()).init(competicionActiva.getNombre());
+            if (modo == 3) ((EliminarEquiposController) loader.getController()).initData(competicionActiva.getNombre());
 
-            // 2. Obtener el controlador y pasarle el nombre de la competición activa
-            SelectorEquiposController controller = loader.getController();
-            controller.initData(this.competicionActiva.getNombre());
-
-            // 3. Crear y configurar el nuevo escenario (Stage)
             Stage stage = new Stage();
-            stage.setTitle("Seleccionar Equipos para " + competicionActiva.getNombre());
             stage.setScene(new Scene(root));
-
-            // 4. Hacer que sea una ventana modal (bloquea la principal hasta cerrar esta)
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
-
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            cargarDatosTabla(); 
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
-    @FXML
-    private void eliminarEquipos() {
-        // Lógica para desvincular un equipo de esta competición
-        System.out.println("Función para eliminar equipo de la competición...");
-    }
-
-    private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
+    @FXML private void insertarEquipos(ActionEvent event) { abrirVentanaEmergente("/leaguemanager/selector_equipos.fxml", "Seleccionar", 1); }
+    @FXML private void crearEquipo(ActionEvent event) { abrirVentanaEmergente("/leaguemanager/crear-equipo.fxml", "Nuevo", 2); }
+    @FXML private void eliminarEquipos(ActionEvent event) { abrirVentanaEmergente("/leaguemanager/eliminar-equipos.fxml", "Eliminar", 3); }
+    @FXML private void volverMenu(ActionEvent event) { Utils.cambiarEscena(event, "/leaguemanager/principal.fxml", "Menú"); }
 }
