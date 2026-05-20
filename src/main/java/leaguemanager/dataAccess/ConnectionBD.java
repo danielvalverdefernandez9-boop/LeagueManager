@@ -13,7 +13,6 @@ public class ConnectionBD {
 
     private static ConnectionBD _instance;
 
-    // Constructor privado
     private ConnectionBD() {
 
         properties = XMLManager.readXML(new ConnectionProperties(), FILE);

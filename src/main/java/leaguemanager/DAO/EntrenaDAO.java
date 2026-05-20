@@ -7,7 +7,6 @@ public class EntrenaDAO {
     private Connection con;
 
     public EntrenaDAO() {
-        /* Inicializamos la conexión utilizando el Singleton de la base de datos */
         con = ConnectionBD.getInstance().getCon();
     }
 
@@ -17,7 +16,7 @@ public class EntrenaDAO {
      *
      * @param dniEntrenador documento de identidad del entrenador a asignar
      * @param nombreEquipo nombre del equipo al que se asigna el entrenador
-     * @param temporada periodo o año de la competición (ej: "2023/24")
+     * @param temporada periodo o año de la competición (ej: "2025/26")
      * @return true si la asignación se registró con éxito, false en caso contrario
      */
     public boolean asignarEntrenador(String dniEntrenador, String nombreEquipo, String temporada) {
@@ -27,7 +26,6 @@ public class EntrenaDAO {
             ps.setString(2, nombreEquipo);
             ps.setString(3, temporada);
 
-            /* Retornamos true si executeUpdate confirma que se ha creado la fila en la tabla intermedia */
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

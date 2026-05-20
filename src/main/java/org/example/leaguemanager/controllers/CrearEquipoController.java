@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import leaguemanager.DAO.CompeticionDAO;
 import leaguemanager.DAO.EquipoDAO;
 import leaguemanager.DAO.ParticipaDAO;
 import leaguemanager.model.Equipo;
@@ -23,43 +24,53 @@ public class CrearEquipoController {
     private final ParticipaDAO participaDAO = new ParticipaDAO();
 
     /**
-     * Recibe el nombre de la competición desde la pantalla anterior.
-     * Es vital que este nombre coincida EXACTAMENTE con el de la BD.
+     * Recibe el nombre de la liga desde la pantalla anterior para saber en qué
+     * competición tenemos que meter el equipo que vamos a crear.
+     *
+     * @param nombreComp El nombre exacto de la competición activa.
      */
     public void init(String nombreComp) {
         this.nombreCompeticion = nombreComp;
-        System.out.println("DEBUG: Controlador Equipo listo para liga: [" + nombreCompeticion + "]");
     }
 
+    /**
+     * Se activa al pulsar el botón de guardar. Recoge los textos, mira que los campos obligatorios
+     * no estén vacíos y comprueba que la liga no haya alcanzado el límite máximo de equipos.
+     * Si todo es correcto, guarda el equipo en la base de datos y lo une a la liga usando el DAO de 'Participa'.
+     */
     @FXML
     private void guardarNuevoEquipo() {
-        // Extraemos y limpiamos espacios en blanco
         String nombreEquipo = nombre.getText().trim();
         String ciudadEquipo = ciudad.getText().trim();
         String estadioEquipo = estadio.getText().trim();
         LocalDate fecha = fecha_fundacion.getValue();
 
-        // 1. Validación de campos obligatorios
         if (nombreEquipo.isEmpty() || ciudadEquipo.isEmpty()) {
             Utils.mostrarAlerta("Campos vacíos", "El nombre y la ciudad son obligatorios para crear un equipo.");
             return;
         }
 
-        // 2. Validación de seguridad de la competición
         if (nombreCompeticion == null || nombreCompeticion.isEmpty()) {
             Utils.mostrarAlerta("Error de flujo", "No se ha detectado una competición activa. Por favor, vuelve atrás y guarda la liga.");
             return;
         }
 
+        leaguemanager.model.Competicion comp = CompeticionDAO.buscarPorNombre(nombreCompeticion);
+        if (comp != null) {
+            int limiteMaximo = comp.getNumero_equipos();
+            int actuales = comp.getEquipos().size();
+
+            if (actuales >= limiteMaximo) {
+                Utils.mostrarAlerta("Límite Alcanzado", "No se pueden añadir más equipos. El límite para esta competición es de " + limiteMaximo + " equipos.");
+                return;
+            }
+        }
+
         try {
             Equipo nuevo = new Equipo(nombreEquipo, ciudadEquipo, estadioEquipo, fecha);
-
-            // PASO A: Intentar insertar el equipo en la tabla 'equipo'
-            // Esto es necesario porque 'participa' tiene una FK hacia 'equipo'
             boolean equipoInsertado = equipoDAO.insertar(nuevo);
 
             if (equipoInsertado) {
-                // PASO B: Intentar vincular el equipo a la competición en la tabla 'participa'
                 boolean vinculado = participaDAO.vincularEquipoACompeticion(nombreEquipo, nombreCompeticion);
 
                 if (vinculado) {
@@ -67,13 +78,11 @@ public class CrearEquipoController {
                             "¡Hecho! El equipo '" + nombreEquipo + "' ha sido creado y asignado a " + nombreCompeticion + ".");
                     limpiarCampos();
                 } else {
-                    // Si el equipo se creó pero esto falla, es por la FK de la competición (image_929481.png)
                     Utils.mostrarAlerta("Error de Vinculación",
                             "El equipo se guardó en el sistema, pero no se pudo unir a '" + nombreCompeticion + "'.\n" +
                                     "Asegúrate de que la competición existe realmente en la base de datos.");
                 }
             } else {
-                // Si equipoDAO.insertar devuelve false, suele ser por clave primaria duplicada
                 Utils.mostrarAlerta("Equipo Duplicado", "Ya existe un equipo registrado con el nombre '" + nombreEquipo + "'.");
             }
 
@@ -84,7 +93,8 @@ public class CrearEquipoController {
     }
 
     /**
-     * Limpia el formulario y devuelve el foco al nombre para agilizar la carga de datos
+     * Vacía todos los cuadros de texto del formulario y vuelve a poner el cursor
+     * en el campo del nombre para poder escribir otro equipo rápidamente.
      */
     private void limpiarCampos() {
         nombre.clear();
@@ -94,12 +104,20 @@ public class CrearEquipoController {
         nombre.requestFocus();
     }
 
+    /**
+     * Se activa con el botón cancelar. Sirve para limpiar todo el formulario por
+     * si el usuario se ha equivocado y quiere volver a empezar a escribir.
+     */
     @FXML
     private void cancelar() {
         limpiarCampos();
-        System.out.println("Formulario reiniciado por el usuario.");
     }
 
+    /**
+     * Cierra la ventana actual de añadir equipo para volver a la pantalla anterior.
+     *
+     * @param event El clic en el botón de salir o volver.
+     */
     @FXML
     private void volver(ActionEvent event) {
         Stage stage = (Stage) nombre.getScene().getWindow();

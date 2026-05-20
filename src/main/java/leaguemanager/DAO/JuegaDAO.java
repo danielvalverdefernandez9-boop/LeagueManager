@@ -7,7 +7,6 @@ public class JuegaDAO {
     private Connection con;
 
     public JuegaDAO() {
-        /* Inicializamos la conexión utilizando el Singleton de la base de datos */
         con = ConnectionBD.getInstance().getCon();
     }
 
@@ -25,7 +24,6 @@ public class JuegaDAO {
             ps.setInt(1, idPartido);
             ps.setString(2, nombreEquipo);
 
-            /* Retornamos true si executeUpdate confirma que se ha creado la fila */
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

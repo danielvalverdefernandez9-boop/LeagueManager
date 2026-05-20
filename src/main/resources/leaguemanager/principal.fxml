@@ -30,7 +30,7 @@
 
                 <VBox alignment="CENTER" spacing="15.0">
                     <children>
-                        <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="280.0" style="-fx-background-color: #e67e22; -fx-cursor: hand;" text="CARGAR COMPETICIÓN" textFill="WHITE">
+                        <Button mnemonicParsing="false" onAction="#cargarCompeticion" prefHeight="45.0" prefWidth="280.0" style="-fx-background-color: #e67e22; -fx-cursor: hand;" text="CARGAR COMPETICIÓN" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>

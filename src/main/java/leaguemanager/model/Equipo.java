@@ -1,6 +1,5 @@
 package leaguemanager.model;
 
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,10 @@ public class Equipo {
     private LocalDate fecha_fundacion;
 
     private List<Jugador> jugadores;
+
+    private int victorias;
+    private int empates;
+    private int derrotas;
 
     public Equipo() {
         jugadores = new ArrayList<>();
@@ -72,6 +75,36 @@ public class Equipo {
 
     public void setJugadores(List<leaguemanager.model.Jugador> jugadores) {
         this.jugadores = jugadores;
+    }
+
+    // --- NUEVOS GETTERS Y SETTERS VIRTUALES (AÑADIDOS SIN MODIFICAR EL RESTO) ---
+
+    public int getVictorias() {
+        return victorias;
+    }
+
+    public void setVictorias(int victorias) {
+        this.victorias = victorias;
+    }
+
+    public int getEmpates() {
+        return empates;
+    }
+
+    public void setEmpates(int empates) {
+        this.empates = empates;
+    }
+
+    public int getDerrotas() {
+        return derrotas;
+    }
+
+    public void setDerrotas(int derrotas) {
+        this.derrotas = derrotas;
+    }
+
+    public int getPuntos() {
+        return (this.victorias * 3) + this.empates;
     }
 
     @Override

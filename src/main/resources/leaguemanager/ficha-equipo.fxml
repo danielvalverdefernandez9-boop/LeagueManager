@@ -11,7 +11,6 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="550.0" style="-fx-background-color: white; -fx-border-color: #3498db; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.leaguemanager.controllers.FichaEquipoController">
     <children>
-        <!-- Botón Volver (Flecha del dibujo) -->
         <Button layoutX="14.0" layoutY="14.0" onAction="#volver" style="-fx-background-color: transparent; -fx-cursor: hand;" text="← Volver" textFill="#3498db">
             <font>
                 <Font name="System Bold" size="14.0" />
@@ -20,7 +19,7 @@
 
         <VBox alignment="CENTER_LEFT" layoutX="47.199999999999996" layoutY="65.0" prefHeight="246.0" prefWidth="238.0" spacing="20.0" AnchorPane.leftAnchor="45.0">
             <children>
-                <Label fx:id="lblNombreEquipo" text="FICHA DE EQUIPO" textFill="#2c3e50">
+                <Label fx:id="NombreEquipo" text="FICHA DE EQUIPO" textFill="#2c3e50">
                     <font>
                         <Font name="System Bold" size="24.0" />
                     </font>
@@ -42,8 +41,6 @@
                 </Button>
             </children>
         </VBox>
-
-        <!-- Recuadro para el Escudo (Derecha en el dibujo) -->
         <ImageView fx:id="imgEscudo" fitHeight="150.0" fitWidth="150.0" layoutX="340.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="60.0">
             <image>
                 <Image url="@logo.png" />

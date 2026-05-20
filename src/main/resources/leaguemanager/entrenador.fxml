@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="450.0" prefWidth="650.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.leaguemanager.controllers.EntrenadorController">
+    <children>
+        <HBox alignment="CENTER_LEFT" layoutX="30.0" layoutY="20.0" prefHeight="100.0" prefWidth="590.0" spacing="130.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
+            <children>
+                <VBox alignment="CENTER_LEFT" spacing="5.0">
+                    <children>
+                        <Label fx:id="NombreEquipo" text="EQUIPO: " textFill="#7f8c8d">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label text="PANEL DE ENTRENADORES" textFill="#2980b9">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+                <ImageView fitHeight="90.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@logo.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </HBox>
+
+        <VBox alignment="CENTER" layoutX="30.0" layoutY="130.0" prefWidth="590.0" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="130.0">
+            <children>
+                <TableView fx:id="tablaEntrenadores" prefHeight="230.0" prefWidth="590.0">
+                    <columns>
+                        <TableColumn fx:id="colDni" prefWidth="150.0" text="DNI" />
+                        <TableColumn fx:id="colNombre" prefWidth="300.0" text="Nombre" />
+                        <TableColumn fx:id="colEdad" prefWidth="138.0" text="Edad" />
+                    </columns>
+                </TableView>
+
+                <HBox alignment="CENTER" prefHeight="50.0" spacing="20.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#volver" prefHeight="35.0" prefWidth="120.0" style="-fx-background-color: #95a5a6; -fx-cursor: hand;" text="Volver al inicio" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="13.0" />
+                            </font>
+                        </Button>
+
+                        <Button mnemonicParsing="false" onAction="#eliminarSeleccionado" prefHeight="35.0" prefWidth="160.0" style="-fx-background-color: #c0392b; -fx-cursor: hand;" text="Eliminar seleccionado" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="13.0" />
+                            </font>
+                            <effect>
+                                <DropShadow />
+                            </effect>
+                        </Button>
+
+                        <Button mnemonicParsing="false" onAction="#nuevoEntrenador" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #2980b9; -fx-cursor: hand;" text="Nuevo Entrenador" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="13.0" />
+                            </font>
+                            <effect>
+                                <DropShadow />
+                            </effect>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

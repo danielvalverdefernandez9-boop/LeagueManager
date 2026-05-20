@@ -28,7 +28,6 @@ public class ParticipaDAO {
             ps.setString(2, nombreCompeticion);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            // Logueamos el error pero permitimos que el flujo continúe devolviendo false
             System.err.println("ERROR SQL en ParticipaDAO: " + e.getMessage());
             return false;
         }

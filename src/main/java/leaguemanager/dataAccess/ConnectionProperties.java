@@ -24,7 +24,6 @@ public class ConnectionProperties implements Serializable {
         this.password = password;
     }
 
-    // SETTERS (CRUCIALES para JAXB)
     public void setServer(String server) { this.server = server; }
     public void setPort(String port) { this.port = port; }
     public void setDataBase(String dataBase) { this.dataBase = dataBase; }

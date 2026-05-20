@@ -38,27 +38,6 @@ public class EntrenadorDAO {
     }
 
     /**
-     * Método que actualiza los datos personales de un entrenador existente
-     * utilizando su DNI como clave de búsqueda.
-     *
-     * @param e objeto Entrenador con la información actualizada
-     * @return true si se modificó el registro correctamente, false si no hubo cambios
-     */
-    public boolean actualizar(Entrenador e) {
-        String sql = "UPDATE Entrenador SET nombre=?, edad=? WHERE dni=?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, e.getNombre());
-            ps.setInt(2, e.getEdad());
-            ps.setString(3, e.getDni());
-
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
      * Método que elimina de forma permanente el registro de un entrenador
      * de la base de datos según el DNI proporcionado.
      *
@@ -125,5 +104,56 @@ public class EntrenadorDAO {
             ex.printStackTrace();
         }
         return lista;
+    }
+
+    /**
+     * Método que recupera la lista de entrenadores vinculados a un equipo específico
+     * realizando una consulta cruzada (JOIN) con la tabla asociativa Entrena.
+     *
+     * @param nombreEquipo el nombre identificador del equipo seleccionado
+     * @return lista de objetos Entrenador que pertenecen o han pertenecido a ese equipo
+     */
+    public List<Entrenador> buscarPorEquipo(String nombreEquipo) {
+        List<Entrenador> lista = new ArrayList<>();
+        String sql = "SELECT e.* FROM Entrenador e " +
+                "JOIN Entrena ent ON e.dni = ent.entrenador_dni " +
+                "WHERE ent.equipo_nombre = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, nombreEquipo);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Entrenador(
+                            rs.getString("dni"),
+                            rs.getString("nombre"),
+                            rs.getInt("edad")
+                    ));
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return lista;
+    }
+    /**
+     * Vincula un entrenador existente con un equipo en la tabla asociativa Entrena
+     * para la temporada actual.
+     *
+     * @param dni Entrenador a vincular
+     * @param nombreEquipo Equipo al que se le asigna
+     * @param temporada Temporada de la vinculación
+     * @return true si la relación se guardó correctamente
+     */
+    public boolean asignarAEquipo(String dni, String nombreEquipo, String temporada) {
+        String sql = "INSERT INTO Entrena (entrenador_dni, equipo_nombre, temporada) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, dni);
+            ps.setString(2, nombreEquipo);
+            ps.setString(3, temporada);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
 }

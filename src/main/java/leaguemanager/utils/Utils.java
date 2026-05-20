@@ -47,7 +47,7 @@ public class Utils {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-    // En leaguemanager.utils.Utils
+
     public static void mostrarMensaje(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
@@ -55,4 +55,35 @@ public class Utils {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-}
+
+    /**
+     * Valida de forma basica que el texto introducido cumpla con el formato
+     * estandar de un DNI (8 numeros y 1 letra).
+     *
+     * @param dni Cadena de texto con el DNI que se va a validar.
+     * @return true si el formato es correcto, false si no cumple las condiciones.
+     */
+    public static boolean validarDNI(String dni) {
+        if (dni == null) return false;
+
+        String dniLimpio = dni.trim();
+
+        if (dniLimpio.length() != 9) {
+            return false;
+        }
+
+        try {
+            String numeros = dniLimpio.substring(0, 8);
+            Integer.parseInt(numeros);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        char letra = dniLimpio.charAt(8);
+
+        if ((letra >= 'A' && letra <= 'Z') || (letra >= 'a' && letra <= 'z')) {
+            return true;
+        }
+
+        return false;
+    }}

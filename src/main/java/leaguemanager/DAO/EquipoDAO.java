@@ -66,23 +66,4 @@ public class EquipoDAO {
         }
         return equipos;
     }
-
-    /**
-     * Método que elimina de forma permanente el registro de un equipo de la base
-     * de datos utilizando su nombre como identificador.
-     *
-     * @param nombre nombre del equipo que se desea eliminar
-     * @return true si el equipo fue borrado correctamente, false en caso de error
-     */
-    public boolean eliminar(String nombre) {
-        String sql = "DELETE FROM Equipo WHERE nombre = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, nombre);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }

@@ -12,26 +12,28 @@ public class JugadorDAO {
 
     private final Connection con;
 
+    /**
+     * Constructor de la clase. Nos conectamos a la base de datos usando el Singleton
+     * de ConnectionBD para no andar abriendo conexiones nuevas todo el rato.
+     */
     public JugadorDAO() {
-        // Inicializar conexión mediante Singleton
         con = ConnectionBD.getInstance().getCon();
     }
+
     /**
-     * Inserta un nuevo jugador en la base de datos.
+     * Mete a un jugador nuevo en la base de datos.
+     * Le pasamos todos sus datos personales y el nombre del equipo en el que juega.
      *
-     * @param jugador objeto Jugador a insertar
-     * @return true si se insertó correctamente
+     * @param jugador El objeto jugador que queremos guardar.
+     * @return true si se guardó bien en la tabla, false si salta un error de SQL.
      */
     public boolean insertar(Jugador jugador) {
-
         String sql = """
-                INSERT INTO Jugador
-                (dni, nombre, edad, posicion, dorsal, equipo_nombre)
+                INSERT INTO Jugador (dni, nombre, edad, posicion, dorsal, equipo_nombre)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setString(1, jugador.getDni());
             ps.setString(2, jugador.getNombre());
             ps.setInt(3, jugador.getEdad());
@@ -40,7 +42,6 @@ public class JugadorDAO {
             ps.setString(6, jugador.getEquipo().getNombre());
 
             return ps.executeUpdate() > 0;
-
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -48,56 +49,18 @@ public class JugadorDAO {
     }
 
     /**
-     * Actualiza los datos de un jugador existente.
+     * Borra a un jugador de la base de datos usando su DNI.
      *
-     * @param jugador jugador con datos actualizados
-     * @return true si se actualizó correctamente
-     */
-    public boolean actualizar(Jugador jugador) {
-
-        String sql = """
-                UPDATE Jugador
-                SET nombre = ?,
-                    edad = ?,
-                    posicion = ?,
-                    dorsal = ?,
-                    equipo_nombre = ?
-                WHERE dni = ?
-                """;
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, jugador.getNombre());
-            ps.setInt(2, jugador.getEdad());
-            ps.setString(3, jugador.getPosicion());
-            ps.setInt(4, jugador.getDorsal());
-            ps.setString(5, jugador.getEquipo().getNombre());
-            ps.setString(6, jugador.getDni());
-
-            return ps.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * Elimina un jugador por su DNI.
-     *
-     * @param dni DNI del jugador
-     * @return true si se eliminó correctamente
+     * @param dni El DNI del jugador que queremos quitar del sistema.
+     * @return true si se borró el jugador, false si hubo un problema.
      */
     public boolean eliminar(String dni) {
-
         String sql = "DELETE FROM Jugador WHERE dni = ?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setString(1, dni);
 
             return ps.executeUpdate() > 0;
-
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -105,38 +68,28 @@ public class JugadorDAO {
     }
 
     /**
-     * Busca un jugador por su DNI.
+     * Busca a un jugador por su DNI haciendo un LEFT JOIN con la tabla de Equipos.
+     * De esta forma, si el jugador tiene equipo, nos trae también toda la info de su club.
      *
-     * @param dni DNI del jugador
-     * @return objeto Jugador o null si no existe
+     * @param dni El DNI del jugador que estamos buscando.
+     * @return El objeto Jugador con toda su información cargada, o null si no se encuentra.
      */
     public Jugador buscarPorId(String dni) {
-
         String sql = """
-                SELECT
-                    j.*,
-                    e.nombre AS eq_nombre,
-                    e.ciudad,
-                    e.estadio,
-                    e.fecha_fundacion
+                SELECT j.*, e.nombre AS eq_nombre, e.ciudad, e.estadio, e.fecha_fundacion
                 FROM Jugador j
-                LEFT JOIN Equipo e
-                    ON j.equipo_nombre = e.nombre
+                LEFT JOIN Equipo e ON j.equipo_nombre = e.nombre
                 WHERE j.dni = ?
                 """;
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setString(1, dni);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-
                 Equipo equipo = null;
 
                 if (rs.getString("eq_nombre") != null) {
-
                     equipo = new Equipo(
                             rs.getString("eq_nombre"),
                             rs.getString("ciudad"),
@@ -154,7 +107,6 @@ public class JugadorDAO {
                         equipo
                 );
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -163,28 +115,23 @@ public class JugadorDAO {
     }
 
     /**
-     * Lista todos los jugadores.
+     * Devuelve una lista con absolutamente todos los jugadores de la base de datos.
+     * Para el objeto de su equipo solo le metemos el nombre, que es lo mínimo que necesitamos.
      *
-     * @return lista de jugadores
+     * @return Un ArrayList con todos los jugadores del sistema.
      */
     public List<Jugador> listarTodos() {
-
         List<Jugador> jugadores = new ArrayList<>();
-
         String sql = """
-                SELECT
-                    j.*,
-                    e.nombre AS eq_nombre
+                SELECT j.*, e.nombre AS eq_nombre
                 FROM Jugador j
-                LEFT JOIN Equipo e
-                    ON j.equipo_nombre = e.nombre
+                LEFT JOIN Equipo e ON j.equipo_nombre = e.nombre
                 """;
 
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
-
                 Equipo equipo = null;
 
                 if (rs.getString("eq_nombre") != null) {
@@ -207,7 +154,6 @@ public class JugadorDAO {
 
                 jugadores.add(jugador);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -216,29 +162,21 @@ public class JugadorDAO {
     }
 
     /**
-     * Busca jugadores pertenecientes a un equipo.
+     * Saca la plantilla completa de un equipo buscando por su nombre.
+     * Crea un objeto equipo básico y se lo asocia a cada jugador que va encontrando.
      *
-     * @param nombreEquipo nombre del equipo
-     * @return lista de jugadores
+     * @param nombreEquipo El nombre del club del que queremos sacar los jugadores.
+     * @return Una lista de jugadores que pertenecen a ese equipo de fútbol.
      */
     public List<Jugador> buscarPorEquipo(String nombreEquipo) {
-
         List<Jugador> jugadores = new ArrayList<>();
-
-        String sql = """
-                SELECT *
-                FROM Jugador
-                WHERE equipo_nombre = ?
-                """;
+        String sql = "SELECT * FROM Jugador WHERE equipo_nombre = ?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setString(1, nombreEquipo);
-
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-
                 Equipo equipo = new Equipo(
                         nombreEquipo,
                         null,
@@ -257,7 +195,6 @@ public class JugadorDAO {
 
                 jugadores.add(jugador);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -266,29 +203,22 @@ public class JugadorDAO {
     }
 
     /**
-     * Cuenta el número de jugadores de un equipo.
+     * Cuenta cuántos jugadores tiene registrados un equipo en la base de datos.
+     * Sirve por ejemplo para validar si un equipo ha llegado al límite de fichajes.
      *
-     * @param nombreEquipo nombre del equipo
-     * @return total de jugadores
+     * @param nombreEquipo El nombre del equipo que queremos contar.
+     * @return El número total de jugadores que tiene el club (si no tiene, devuelve 0).
      */
     public int contarPorEquipo(String nombreEquipo) {
-
-        String sql = """
-                SELECT COUNT(*) AS total
-                FROM Jugador
-                WHERE equipo_nombre = ?
-                """;
+        String sql = "SELECT COUNT(*) AS total FROM Jugador WHERE equipo_nombre = ?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setString(1, nombreEquipo);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 return rs.getInt("total");
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import leaguemanager.DAO.ParticipaDAO;
 import leaguemanager.model.Equipo;
 import leaguemanager.utils.Utils;
-
 import java.util.Optional;
 
 public class EliminarEquiposController {
@@ -23,23 +22,24 @@ public class EliminarEquiposController {
     private final ParticipaDAO participaDAO = new ParticipaDAO();
 
     /**
-     * Se llama al abrir la ventana.
+     * Se ejecuta al abrir la ventana. Guarda el nombre de la liga, configura la columna
+     * de la tabla, activa la opción para poder seleccionar varios equipos a la vez y la rellena.
+     *
+     * @param nombreComp El nombre de la competición de la que queremos quitar equipos.
      */
     public void initData(String nombreComp) {
         this.nombreCompeticion = nombreComp;
 
-        // Configuración de tabla
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         tablaBorrar.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        // Cargar equipos por primera vez
         refrescarTabla();
     }
 
     /**
-     * Este método es el corazón de lo que pides:
-     * Si no hay equipos (porque la liga es nueva o se borraron todos), muestra el aviso.
-     * Si el usuario añade equipos y vuelve a entrar (o refresca), aparecerán.
+     * Mira en la base de datos qué equipos están metidos en la liga. Si no hay ninguno,
+     * esconde la tabla y muestra un texto avisando. Si encuentra equipos, los pinta en la tabla
+     * y activa el botón de eliminar.
      */
     public void refrescarTabla() {
         if (nombreCompeticion == null || nombreCompeticion.isEmpty()) {
@@ -53,13 +53,11 @@ public class EliminarEquiposController {
         ObservableList<Equipo> inscritos = participaDAO.obtenerEquiposPorCompeticion(nombreCompeticion);
 
         if (inscritos == null || inscritos.isEmpty()) {
-            /* ESTADO 1: No hay equipos todavía */
             tablaBorrar.setVisible(false);
             btnEliminar.setDisable(true);
             lblMensajeVacio.setText("La competición '" + nombreCompeticion + "' aún no tiene equipos inscritos.");
             lblMensajeVacio.setVisible(true);
         } else {
-            /* ESTADO 2: Se han detectado equipos vinculados */
             tablaBorrar.setItems(inscritos);
             tablaBorrar.setVisible(true);
             btnEliminar.setDisable(false);
@@ -67,6 +65,11 @@ public class EliminarEquiposController {
         }
     }
 
+    /**
+     * Se activa al pulsar el botón de eliminar. Coge los equipos que el usuario haya seleccionado,
+     * saca un cuadro de confirmación en la pantalla y, si el usuario dice que sí, los borra de la
+     * tabla 'Participa' en la base de datos y actualiza la vista.
+     */
     @FXML
     private void eliminarSeleccionados() {
         ObservableList<Equipo> seleccionados = tablaBorrar.getSelectionModel().getSelectedItems();
@@ -76,7 +79,6 @@ public class EliminarEquiposController {
             return;
         }
 
-        // Confirmación
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmar");
         confirmacion.setHeaderText("Retirar equipos de '" + nombreCompeticion + "'");
@@ -86,14 +88,17 @@ public class EliminarEquiposController {
 
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             for (Equipo e : seleccionados) {
-                // Borramos la relación en la tabla 'participa'
                 participaDAO.eliminarEquipoDeCompeticion(e.getNombre(), nombreCompeticion);
             }
-            // Volvemos a comprobar la base de datos: si ya no quedan, aparecerá el mensaje vacío
             refrescarTabla();
         }
     }
 
+    /**
+     * Cierra la ventana emergente actual sin guardar ningún cambio ni borrar nada.
+     *
+     * @param event El clic en el botón de cancelar.
+     */
     @FXML
     private void cancelar(ActionEvent event) {
         Stage stage = (Stage) tablaBorrar.getScene().getWindow();
