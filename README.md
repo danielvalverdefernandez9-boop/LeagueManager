@@ -20,7 +20,7 @@
 
 ## 📝 Descripción
 
-**League Manager** es una aplicación de escritorio robusta y moderna diseñada para la administración, control y seguimiento de ligas o torneos deportivos.
+**League Manager** es una aplicación diseñada para la administración, control y seguimiento de ligas o torneos deportivos.
 
 Utilizando una arquitectura limpia basada en los patrones **MVC (Modelo-Vista-Controlador)** y **DAO (Data Access Object)**, la aplicación garantiza una sincronización perfecta y en tiempo real entre la interfaz gráfica de usuario y la persistencia del sistema.
 
