@@ -6,14 +6,8 @@
   <img src="https://img.shields.io/badge/Architecture-MVC%20%2F%20DAO-green?style=for-the-badge" alt="Architecture">
 </p>
 
----
-
-## 🎨 El Logo del Proyecto
-
 <p align="center">
   <img src="src/main/resources/leaguemanager/logo.png" alt="LeagueManager Logo" width="230">
-  <br>
-  <strong>⚽ Gestión Integral de Competiciones Deportivas 🏀</strong>
 </p>
 
 ---
