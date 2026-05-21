@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<connection>
-    <server>localhost</server>
-    <port>3307</port>
-    <dataBase>leaguemanager</dataBase>
-    <user>root</user>
-    <password>1234</password>
-</connection>
