@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import leaguemanager.model.Competicion;
 import leaguemanager.model.Equipo;
+import leaguemanager.model.Partido;
 import leaguemanager.utils.Utils;
 import leaguemanager.dataAccess.ConnectionBD;
 
@@ -45,12 +46,15 @@ public class ClasificacionController {
     /**
      * Prepara todo al arrancar la pantalla. Mete los equipos en la lista, los ordena
      * por puntos para que la clasificación salga bien, pone el título y calcula qué jornada toca.
+     * * MODIFICACIÓN: Ahora recalcula las estadísticas guardadas en la BD antes de ordenar.
      *
      * @param comp El objeto de la competición que se está jugando.
      */
     public void init(Competicion comp) {
         this.competicionActual = comp;
         this.listaEquipos = FXCollections.observableArrayList(comp.getEquipos());
+
+        recalcularEstadisticasDesdeBD();
 
         this.listaEquipos.sort((e1, e2) -> Integer.compare(e2.getPuntos(), e1.getPuntos()));
 
@@ -61,6 +65,58 @@ public class ClasificacionController {
         configurarTabla();
         calcularJornadaActual();
         generarEnfrentamientos();
+    }
+
+    /**
+     * Recupera el histórico de partidos de la competición desde la base de datos
+     * y recalcula en memoria las estadísticas (victorias, empates, derrotas y puntos)
+     * de cada equipo para actualizar correctamente la tabla de clasificación.
+     */
+    private void recalcularEstadisticasDesdeBD() {
+        if (competicionActual == null || listaEquipos.isEmpty()) return;
+
+        for (Equipo e : listaEquipos) {
+            e.setVictorias(0);
+            e.setEmpates(0);
+            e.setDerrotas(0);
+        }
+
+        String sql = "SELECT p.goles_local, p.goles_visitante, " +
+                "       (SELECT equipo_nombre FROM Juega j WHERE j.id_partido = p.id_partido LIMIT 1) as loc, " +
+                "       (SELECT equipo_nombre FROM Juega j WHERE j.id_partido = p.id_partido LIMIT 1, 1) as vis " +
+                "FROM Partido p " +
+                "WHERE p.competicion_nombre = ? " +
+                "ORDER BY p.id_partido ASC";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, competicionActual.getNombre());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String locNom = rs.getString("loc");
+                    String visNom = rs.getString("vis");
+                    int gL = rs.getInt("goles_local");
+                    int gV = rs.getInt("goles_visitante");
+
+                    Equipo local = listaEquipos.stream().filter(e -> e.getNombre().equals(locNom)).findFirst().orElse(null);
+                    Equipo visitante = listaEquipos.stream().filter(e -> e.getNombre().equals(visNom)).findFirst().orElse(null);
+
+                    if (local != null && visitante != null) {
+                        if (gL > gV) {
+                            local.setVictorias(local.getVictorias() + 1);
+                            visitante.setDerrotas(visitante.getDerrotas() + 1);
+                        } else if (gL < gV) {
+                            visitante.setVictorias(visitante.getVictorias() + 1);
+                            local.setDerrotas(local.getDerrotas() + 1);
+                        } else {
+                            local.setEmpates(local.getEmpates() + 1);
+                            visitante.setEmpates(visitante.getEmpates() + 1);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -180,12 +236,6 @@ public class ClasificacionController {
     /**
      * Crea una fila visual con los nombres de los dos equipos y los cuadros de texto
      * donde van los goles para meterlos dentro del contenedor de la interfaz.
-     *
-     * @param local     El nombre del equipo que juega en casa.
-     * @param visitante El nombre del equipo de fuera.
-     * @param golesL    Goles marcados por el local (vacio si no se ha jugado).
-     * @param golesV    Goles marcados por el visitante (vacio si no se ha jugado).
-     * @return El contenedor HBox listo para añadirse a la pantalla.
      */
     private HBox crearFilaPartidoInterfaz(String local, String visitante, String golesL, String golesV) {
         HBox filaPartido = new HBox(10);
@@ -217,10 +267,6 @@ public class ClasificacionController {
     /**
      * Va a la base de datos a buscar los partidos que ya se jugaron anteriormente
      * usando límites y saltos en la consulta SQL según la jornada por la que vayamos.
-     *
-     * @param offset El número del partido inicial desde el que empezamos a leer.
-     * @param limite Cuántos partidos tenemos que sacar de golpe (la mitad de los equipos).
-     * @return Una lista de filas visuales con los resultados antiguos cargados.
      */
     private List<HBox> obtenerPartidosPasadosDeBD(int offset, int limite) {
         List<HBox> filas = new ArrayList<>();
@@ -251,33 +297,6 @@ public class ClasificacionController {
             e.printStackTrace();
         }
         return filas;
-    }
-
-    /**
-     * Cuenta cuántas veces se han enfrentado dos equipos en la base de datos
-     * para llevar un control de los partidos directos que se han jugado.
-     *
-     * @param eq1 Nombre del primer equipo.
-     * @param eq2 Nombre del segundo equipo.
-     * @return El número total de veces que han jugado entre ellos.
-     */
-    private int contarEnfrentamientosDirectos(String eq1, String eq2) {
-        String sql = "SELECT COUNT(*) FROM Partido p " +
-                "WHERE p.competicion_nombre = ? AND p.id_partido IN (" +
-                "  SELECT j1.id_partido FROM Juega j1 JOIN Juega j2 ON j1.id_partido = j2.id_partido " +
-                "  WHERE j1.equipo_nombre = ? AND j2.equipo_nombre = ?" +
-                ")";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, competicionActual.getNombre());
-            ps.setString(2, eq1);
-            ps.setString(3, eq2);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
     }
 
     /**
@@ -329,8 +348,6 @@ public class ClasificacionController {
     /**
      * Saca goles aleatorios para los partidos vacíos que hay en pantalla, los mete
      * en la base de datos y actualiza los puntos de la clasificación al momento.
-     *
-     * @param event El clic en el botón de simular jornada.
      */
     @FXML
     private void simularJornada(ActionEvent event) {
@@ -368,11 +385,6 @@ public class ClasificacionController {
     /**
      * Guarda el resultado de un partido simulado metiendo los datos en la tabla Partido
      * y las uniones de qué equipos jugaron en la tabla intermedia Juega.
-     *
-     * @param local     Nombre del equipo local.
-     * @param visitante Nombre del equipo visitante.
-     * @param gL        Goles marcados por el local.
-     * @param gV        Goles marcados por el visitante.
      */
     private void registrarPartidoEnBD(String local, String visitante, int gL, int gV) {
         String sqlPartido = "INSERT INTO Partido (fecha, goles_local, goles_visitante, competicion_nombre) VALUES (CURDATE(), ?, ?, ?)";
@@ -407,11 +419,6 @@ public class ClasificacionController {
     /**
      * Compara los goles del partido simulado para sumarle los partidos ganados,
      * empatados o perdidos a los objetos de los dos equipos que acaban de jugar.
-     *
-     * @param localNom El nombre del equipo local.
-     * @param visNom   El nombre del equipo visitante.
-     * @param gL       Los goles que metió el de casa.
-     * @param gV       Los goles que metió el de fuera.
      */
     private void actualizarEstadisticas(String localNom, String visNom, int gL, int gV) {
         Equipo local = listaEquipos.stream().filter(e -> e.getNombre().equals(localNom)).findFirst().get();
@@ -432,8 +439,6 @@ public class ClasificacionController {
     /**
      * Resta uno al contador de la jornada para volver atrás y ver qué partidos se jugaron
      * en las semanas anteriores de la competición.
-     *
-     * @param event El clic en el botón Anterior.
      */
     @FXML
     private void anteriorJornada(ActionEvent event) {
@@ -448,8 +453,6 @@ public class ClasificacionController {
     /**
      * Suma uno a la jornada para avanzar, pero antes mira en la base de datos que hayamos
      * simulado obligatoriamente los partidos de la jornada actual para no dejar huecos vacíos.
-     *
-     * @param event El clic en el botón Siguiente.
      */
     @FXML
     private void siguienteJornada(ActionEvent event) {
@@ -478,8 +481,6 @@ public class ClasificacionController {
     /**
      * Coge el equipo que tengamos seleccionado en la tabla y abre su pantalla de detalles
      * (la ficha técnica) pasándole la información que necesita.
-     *
-     * @param event El clic en el botón para ir a la ficha.
      */
     @FXML
     private void irAFichaEquipo(ActionEvent event) {
@@ -511,12 +512,10 @@ public class ClasificacionController {
     /**
      * Muestra un mensaje avisando de que todo está guardado correctamente y nos manda
      * de vuelta al menú de inicio del programa.
-     *
-     * @param event El clic en el botón Guardar y Salir.
      */
     @FXML
     private void guardarYSalir(ActionEvent event) {
-        Utils.mostrarAlerta("Guardado Exitoso", "Todos los partidos simulados se han registrado correctamente en la Base de Datos.");
+        Utils.mostrarMensaje("Guardado Exitoso", "Todos los partidos simulados se han registrado correctamente en la Base de Datos.");
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/leaguemanager/principal.fxml"));

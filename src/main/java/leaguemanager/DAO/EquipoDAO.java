@@ -12,7 +12,7 @@ public class EquipoDAO {
     private Connection con;
 
     public EquipoDAO() {
-        /* Inicializamos la conexión utilizando el Singleton de la base de datos */
+
         con = ConnectionBD.getInstance().getCon();
     }
 

@@ -201,28 +201,4 @@ public class JugadorDAO {
 
         return jugadores;
     }
-
-    /**
-     * Cuenta cuántos jugadores tiene registrados un equipo en la base de datos.
-     * Sirve por ejemplo para validar si un equipo ha llegado al límite de fichajes.
-     *
-     * @param nombreEquipo El nombre del equipo que queremos contar.
-     * @return El número total de jugadores que tiene el club (si no tiene, devuelve 0).
-     */
-    public int contarPorEquipo(String nombreEquipo) {
-        String sql = "SELECT COUNT(*) AS total FROM Jugador WHERE equipo_nombre = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, nombreEquipo);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("total");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return 0;
-    }
 }

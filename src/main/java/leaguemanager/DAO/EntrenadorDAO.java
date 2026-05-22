@@ -12,7 +12,6 @@ public class EntrenadorDAO {
     private Connection con;
 
     public EntrenadorDAO() {
-        /* Inicializamos la conexión utilizando el Singleton de la base de datos */
         this.con = ConnectionBD.getInstance().getCon();
     }
 
@@ -53,32 +52,6 @@ public class EntrenadorDAO {
             ex.printStackTrace();
             return false;
         }
-    }
-
-    /**
-     * Método de búsqueda que recupera la información de un entrenador específico
-     * a partir de su identificador único (DNI).
-     *
-     * @param dni documento de identidad del entrenador a localizar
-     * @return objeto Entrenador si se encuentra en la base de datos, o null si no existe
-     */
-    public Entrenador buscarPorId(String dni) {
-        String sql = "SELECT * FROM Entrenador WHERE dni=?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, dni);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return new Entrenador(
-                        rs.getString("dni"),
-                        rs.getString("nombre"),
-                        rs.getInt("edad")
-                );
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return null;
     }
 
     /**
