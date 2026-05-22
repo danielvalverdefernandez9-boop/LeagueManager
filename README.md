@@ -36,7 +36,7 @@ La aplicación cubre todo el flujo de negocio de una competición deportiva a tr
 
 * **Lenguaje:** Java 17 o superior.
 * **Interfaz Gráfica:** JavaFX (vistas diseñadas y ajustadas mediante Scene Builder).
-* **Base de Datos:** MySQL Workbench (Persistencia relacional gestionada mediante JDBC).
+* **Base de Datos:** MySQL Workbench (Persistencia relacional gestionada mediante JDBC).**(descargar league manager.sql para obtener la abse de datos)**
 * **Gestor de Dependencias:** Maven.
 
 ---
