@@ -1,0 +1,78 @@
+@startuml
+' --- CONFIGURACIÓN VISUAL ---
+skinparam backgroundcolor #ffffff
+skinparam usecase {
+    BackgroundColor #071126
+    BorderColor #1e293b
+    FontColor #ffffff
+    ArrowColor #ea580c
+}
+skinparam actor {
+    BackgroundColor #f59e0b
+    BorderColor #ea580c
+    FontColor #000000
+}
+
+left to right direction
+
+' --- ACTORES ---
+actor "Administrador" as Admin
+
+' --- SISTEMA LEAGUEMANAGER ---
+rectangle LeagueManager {
+
+    ' Gestión de Competiciones
+    usecase "CU1: Crear Competición" as UC_CrearCompeticion
+    usecase "CU2: Inscribir Equipos" as UC_InscribirEquipos
+    usecase "CU3: Consultar Clasificación" as UC_Clasificacion
+
+    ' Gestión de Equipos
+    usecase "CU4: Crear Equipo" as UC_CrearEquipo
+    usecase "CU5: Editar Equipo" as UC_EditarEquipo
+    usecase "CU6: Eliminar Equipo" as UC_EliminarEquipo
+
+    ' Gestión de Jugadores
+    usecase "CU7: Registrar Jugadores" as UC_Jugadores
+    usecase "CU8: Validar DNI Único" as UC_ValidarDNI
+    usecase "CU9: Verificar Dorsal Disponible" as UC_ValidarDorsal
+
+    ' Gestión de Entrenadores
+    usecase "CU10: Añadir Entrenador" as UC_Entrenador
+    usecase "CU11: Asignar Entrenador a Equipo" as UC_AsignarEntrenador
+
+    ' Gestión de Jornadas y Partidos
+    usecase "CU12: Generar Jornadas" as UC_Jornadas
+    usecase "CU13: Programar Partidos" as UC_Partidos
+    usecase "CU14: Registrar Resultados" as UC_Resultados
+
+    ' Validaciones adicionales
+    usecase "Validar Cupo Máximo" as UC_Cupo
+    usecase "Evitar Jornadas Duplicadas" as UC_JornadaSegura
+}
+
+' --- RELACIONES ACTOR ---
+Admin --> UC_CrearCompeticion
+Admin --> UC_InscribirEquipos
+Admin --> UC_Clasificacion
+Admin --> UC_CrearEquipo
+Admin --> UC_EditarEquipo
+Admin --> UC_EliminarEquipo
+Admin --> UC_Jugadores
+Admin --> UC_Entrenador
+Admin --> UC_AsignarEntrenador
+Admin --> UC_Jornadas
+Admin --> UC_Partidos
+Admin --> UC_Resultados
+
+' --- RELACIONES INCLUDE ---
+UC_Jugadores ..> UC_ValidarDNI : <<include>>
+UC_Jugadores ..> UC_ValidarDorsal : <<include>>
+UC_Entrenador ..> UC_ValidarDNI : <<include>>
+UC_InscribirEquipos ..> UC_Cupo : <<include>>
+UC_Jornadas ..> UC_JornadaSegura : <<include>>
+
+' --- RELACIONES EXTEND ---
+UC_Partidos ..> UC_Jornadas : <<extend>>
+UC_Resultados ..> UC_Clasificacion : <<extend>>
+
+@enduml

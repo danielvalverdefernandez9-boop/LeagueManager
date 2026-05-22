@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Clase que representa un Equipo dentro del sistema LeagueManager.
+ * Almacena los datos del club, su plantilla de jugadores y las estadísticas de la temporada.
+ */
 public class Equipo {
 
     private String nombre;
@@ -18,10 +22,16 @@ public class Equipo {
     private int empates;
     private int derrotas;
 
+    /**
+     * Constructor vacío por defecto.
+     */
     public Equipo() {
         jugadores = new ArrayList<>();
     }
 
+    /**
+     * Constructor con los parámetros fundamentales de creación de un club.
+     */
     public Equipo(String nombre,
                   String ciudad,
                   String estadio,
@@ -31,11 +41,9 @@ public class Equipo {
         this.ciudad = ciudad;
         this.estadio = estadio;
         this.fecha_fundacion = fechaFundacion;
-
         jugadores = new ArrayList<>();
     }
 
-    // GETTERS Y SETTERS
 
     public String getNombre() {
         return nombre;
@@ -77,7 +85,6 @@ public class Equipo {
         this.jugadores = jugadores;
     }
 
-    // --- NUEVOS GETTERS Y SETTERS VIRTUALES (AÑADIDOS SIN MODIFICAR EL RESTO) ---
 
     public int getVictorias() {
         return victorias;
@@ -103,22 +110,39 @@ public class Equipo {
         this.derrotas = derrotas;
     }
 
+    /**
+     * Calcula dinámicamente los puntos totales del equipo en la liga.
+     * Otorga 3 puntos por victoria y 1 por empate.
+     */
     public int getPuntos() {
         return (this.victorias * 3) + this.empates;
     }
 
+    /**
+     * Método para mostrar el nombre del equipo en formato texto.
+     */
     @Override
     public String toString() {
         return nombre;
     }
 
+    /**
+     * Comparación de objetos Equipo basándose en sus atributos de identidad y plantilla.
+     */
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Equipo equipo = (Equipo) o;
-        return Objects.equals(nombre, equipo.nombre) && Objects.equals(ciudad, equipo.ciudad) && Objects.equals(estadio, equipo.estadio) && Objects.equals(fecha_fundacion, equipo.fecha_fundacion) && Objects.equals(jugadores, equipo.jugadores);
+        return Objects.equals(nombre, equipo.nombre) &&
+                Objects.equals(ciudad, equipo.ciudad) &&
+                Objects.equals(estadio, equipo.estadio) &&
+                Objects.equals(fecha_fundacion, equipo.fecha_fundacion) &&
+                Objects.equals(jugadores, equipo.jugadores);
     }
 
+    /**
+     * Generación del código hash único para la indexación y colecciones de equipos.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(nombre, ciudad, estadio, fecha_fundacion, jugadores);

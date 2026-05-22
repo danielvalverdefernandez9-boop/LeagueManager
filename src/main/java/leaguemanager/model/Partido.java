@@ -5,26 +5,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Clase que representa la entidad Partido dentro del modelo de negocio de LeagueManager.
+ */
 public class Partido {
 
+    // --- Atributos propios del partido ---
     private int id_partido;
     private LocalDate fecha;
     private int goles_local;
     private int goles_visitante;
 
     private Competicion competicion;
-
-    // NUEVOS ATRIBUTOS
     private Equipo equipoLocal;
     private Equipo equipoVisitante;
-
     private List<Equipo> equipos;
 
+    /**
+     * Constructor vacío por defecto.
+     */
     public Partido() {
         equipos = new ArrayList<>();
     }
 
-    // CONSTRUCTOR COMPLETO
+    /**
+     * Constructor completo con todos los parámetros.
+     */
     public Partido(int id_partido,
                    LocalDate fecha,
                    int goles_local,
@@ -37,16 +43,12 @@ public class Partido {
         this.fecha = fecha;
         this.goles_local = goles_local;
         this.goles_visitante = goles_visitante;
-
         this.equipoLocal = equipoLocal;
         this.equipoVisitante = equipoVisitante;
-
         this.competicion = competicion;
-
         equipos = new ArrayList<>();
     }
 
-    // GETTERS Y SETTERS
 
     public int getId_partido() {
         return id_partido;
@@ -112,9 +114,11 @@ public class Partido {
         this.equipos = equipos;
     }
 
+    /**
+     * Método para mostrar el partido en formato de texto legible.
+     */
     @Override
     public String toString() {
-
         String local = (equipoLocal != null) ? equipoLocal.getNombre() : "Local";
         String visitante = (equipoVisitante != null) ? equipoVisitante.getNombre() : "Visitante";
 
@@ -129,13 +133,26 @@ public class Partido {
                 "]";
     }
 
+    /**
+     * Comparación de objetos Partido.
+     */
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Partido partido = (Partido) o;
-        return id_partido == partido.id_partido && goles_local == partido.goles_local && goles_visitante == partido.goles_visitante && Objects.equals(fecha, partido.fecha) && Objects.equals(competicion, partido.competicion) && Objects.equals(equipoLocal, partido.equipoLocal) && Objects.equals(equipoVisitante, partido.equipoVisitante) && Objects.equals(equipos, partido.equipos);
+        return id_partido == partido.id_partido &&
+                goles_local == partido.goles_local &&
+                goles_visitante == partido.goles_visitante &&
+                Objects.equals(fecha, partido.fecha) &&
+                Objects.equals(competicion, partido.competicion) &&
+                Objects.equals(equipoLocal, partido.equipoLocal) &&
+                Objects.equals(equipoVisitante, partido.equipoVisitante) &&
+                Objects.equals(equipos, partido.equipos);
     }
 
+    /**
+     * Generación del código hash único de la clase.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id_partido, fecha, goles_local, goles_visitante, competicion, equipoLocal, equipoVisitante, equipos);
