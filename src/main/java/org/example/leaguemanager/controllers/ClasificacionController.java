@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import leaguemanager.model.Competicion;
 import leaguemanager.model.Equipo;
-import leaguemanager.model.Partido;
+import leaguemanager.DAO.JuegaDAO;
 import leaguemanager.utils.Utils;
 import leaguemanager.dataAccess.ConnectionBD;
 
@@ -384,11 +384,10 @@ public class ClasificacionController {
 
     /**
      * Guarda el resultado de un partido simulado metiendo los datos en la tabla Partido
-     * y las uniones de qué equipos jugaron en la tabla intermedia Juega.
+     * y las uniones de qué equipos jugaron delegando la acción en JuegaDAO.
      */
     private void registrarPartidoEnBD(String local, String visitante, int gL, int gV) {
         String sqlPartido = "INSERT INTO Partido (fecha, goles_local, goles_visitante, competicion_nombre) VALUES (CURDATE(), ?, ?, ?)";
-        String sqlJuega = "INSERT INTO Juega (equipo_nombre, id_partido) VALUES (?, ?)";
 
         try {
             PreparedStatement psP = con.prepareStatement(sqlPartido, Statement.RETURN_GENERATED_KEYS);
@@ -401,15 +400,9 @@ public class ClasificacionController {
             if (rsKeys.next()) {
                 int idPartido = rsKeys.getInt(1);
 
-                PreparedStatement psJLocal = con.prepareStatement(sqlJuega);
-                psJLocal.setString(1, local);
-                psJLocal.setInt(2, idPartido);
-                psJLocal.executeUpdate();
-
-                PreparedStatement psJVis = con.prepareStatement(sqlJuega);
-                psJVis.setString(1, visitante);
-                psJVis.setInt(2, idPartido);
-                psJVis.executeUpdate();
+                JuegaDAO juegaDAO = new JuegaDAO();
+                juegaDAO.registrarEquipoEnPartido(idPartido, local);
+                juegaDAO.registrarEquipoEnPartido(idPartido, visitante);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -512,6 +505,7 @@ public class ClasificacionController {
     /**
      * Muestra un mensaje avisando de que todo está guardado correctamente y nos manda
      * de vuelta al menú de inicio del programa.
+     * * MODIFICACIÓN: Uso de mostrarMensaje para evitar la X roja de las alertas de error.
      */
     @FXML
     private void guardarYSalir(ActionEvent event) {

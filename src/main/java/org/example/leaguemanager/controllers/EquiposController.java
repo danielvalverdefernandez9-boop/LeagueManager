@@ -1,7 +1,6 @@
 package org.example.leaguemanager.controllers;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import leaguemanager.DAO.ParticipaDAO;
+import leaguemanager.DAO.EntrenaDAO;
 import leaguemanager.model.Competicion;
 import leaguemanager.model.Equipo;
 import leaguemanager.utils.Utils;
@@ -60,6 +60,7 @@ public class EquiposController {
      * Dependiendo del número que le pasemos en el 'modo', inicializa el controlador
      * de la ventana emergente que toque (1 para buscar, 2 para crear, 3 para borrar)
      * y se espera a que se cierre para refrescar la tabla principal.
+     * * * MODIFICACIÓN: Al volver del modo 2 (creación), se vincula un entrenador de forma automática.
      *
      * @param fxml   La ruta del archivo de vista FXML que queremos abrir.
      * @param titulo El título de texto que se le pondrá arriba a la ventana.
@@ -78,6 +79,22 @@ public class EquiposController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
+
+            if (modo == 2) {
+                List<Equipo> equiposActuales = participaDAO.obtenerEquiposPorCompeticion(competicionActiva.getNombre());
+
+                if (!equiposActuales.isEmpty()) {
+
+                    String nombreUltimoEquipo = equiposActuales.get(equiposActuales.size() - 1).getNombre();
+
+                    EntrenaDAO entrenaDAO = new EntrenaDAO();
+
+                    String dniEntrenadorComodin = "12345678A";
+                    String temporadaActual = "2025/26";
+
+                    entrenaDAO.asignarEntrenador(dniEntrenadorComodin, nombreUltimoEquipo, temporadaActual);
+                }
+            }
 
             cargarDatosTabla();
         } catch (IOException e) {
