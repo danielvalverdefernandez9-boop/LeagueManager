@@ -31,8 +31,15 @@ La aplicación cubre todo el flujo de negocio de una competición deportiva a tr
 * **📊 Clasificación Automática:** Panel de control interactivo que calcula en tiempo real los puntos ($+3$ por victoria, $+1$ por empate), goles a favor, goles en contra y el gol average ($\text{DG}$) general.
 
 ---
+## 🛠️ Configuración de la Base de Datos
 
-## 🛠️ Stack Tecnológico
+El repositorio incluye el archivo script listo para importar. Sigue estos pasos:
+
+1. Localiza el archivo **`league manager.sql`** en la raíz de este proyecto.
+2. Descárgalo e impórtalo en tu gestor de bases de datos de preferencia (por ejemplo, MySQL Workbench, phpMyAdmin, etc.).
+3. Asegúrate de que las credenciales de conexión en tu código coincidan con tu servidor local.
+
+##  Stack Tecnológico
 
 * **Lenguaje:** Java 17 o superior.
 * **Interfaz Gráfica:** JavaFX (vistas diseñadas y ajustadas mediante Scene Builder).
