@@ -152,7 +152,7 @@ public class CompeticionDAO {
                 try (ResultSet rsP = psP.executeQuery()) {
                     while (rsP.next()) {
                         String localNom = rsP.getString("local");
-                        String visNom = rsP.getString("visitor"); // Nota: En tu código original ponía "visitante", cámbialo si da error con el alias del SELECT
+                        String visNom = rsP.getString("visitor");
                         int gL = rsP.getInt("goles_local");
                         int gV = rsP.getInt("goles_visitante");
 
