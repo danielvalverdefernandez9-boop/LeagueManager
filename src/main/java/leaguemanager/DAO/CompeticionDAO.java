@@ -72,47 +72,6 @@ public class CompeticionDAO {
     }
 
     /**
-     * Saca una lista con todas las competiciones que hay guardadas en la base de datos.
-     * Sirve para listarlas en la interfaz y a cada una le mete sus equipos correspondientes.
-     *
-     * @return Un ArrayList con todas las competiciones de la tabla.
-     */
-    public List<Competicion> listarTodas() {
-        List<Competicion> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Competicion";
-
-        try (Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-                Competicion comp = new Competicion(
-                        rs.getString("nombre"),
-                        rs.getInt("numero_equipos"),
-                        rs.getString("temporada")
-                );
-                comp.setEquipos(cargarEquiposConEstadisticas(comp.getNombre()));
-                lista.add(comp);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return lista;
-    }
-
-    /**
-     * Método público para pedir los equipos de una liga.
-     * Llama directamente al método privado que calcula los puntos y estadísticas.
-     *
-     * @param nombreCompeticion El nombre de la liga de la que queremos los equipos.
-     * @return La lista de equipos listos para pintar en la tabla de clasificación.
-     */
-    public List<Equipo> cargarEquiposDeCompeticion(String nombreCompeticion) {
-        return cargarEquiposConEstadisticas(nombreCompeticion);
-    }
-
-    /**
      * Este método hace la magia de la clasificación. Primero busca qué equipos están
      * metidos en la liga usando la tabla 'Participa'. Luego mira todos los partidos
      * jugados de esa liga y va sumando las victorias, empates y derrotas en caliente.

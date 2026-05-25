@@ -1,20 +1,13 @@
 package leaguemanager.DAO;
-
 import leaguemanager.dataAccess.ConnectionBD;
-import leaguemanager.model.Competicion;
-import leaguemanager.model.Equipo;
 import leaguemanager.model.Partido;
-
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PartidoDAO {
 
     private Connection con;
 
     public PartidoDAO() {
-        /* Obtenemos la conexión activa desde nuestro Singleton ConnectionBD */
         con = ConnectionBD.getInstance().getCon();
     }
 
@@ -50,56 +43,5 @@ public class PartidoDAO {
             e.printStackTrace();
             return false;
         }
-    }
-
-    /**
-     * Versión que devuelve una lista completa de los partidos almacenados, realizando un JOIN
-     * con la tabla Competicion para obtener los datos básicos del torneo.
-     *
-     * @return lista de todos los partidos encontrados en la base de datos
-     */
-    public List<Partido> listarTodos() {
-
-        List<Partido> lista = new ArrayList<>();
-
-        String sql = "SELECT p.*, c.numero_equipos, c.temporada " +
-                "FROM Partido p " +
-                "JOIN Competicion c ON p.competicion_nombre = c.nombre";
-
-        try (Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-
-                Competicion comp = new Competicion(
-                        rs.getString("competicion_nombre"),
-                        rs.getInt("numero_equipos"),
-                        rs.getString("temporada")
-                );
-
-                Equipo local = new Equipo();
-                local.setNombre(rs.getString("equipo_local"));
-
-                Equipo visitante = new Equipo();
-                visitante.setNombre(rs.getString("equipo_visitante"));
-
-                Partido partido = new Partido(
-                        rs.getInt("id_partido"),
-                        rs.getDate("fecha").toLocalDate(),
-                        rs.getInt("goles_local"),
-                        rs.getInt("goles_visitante"),
-                        local,
-                        visitante,
-                        comp
-                );
-
-                lista.add(partido);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return lista;
     }
 }

@@ -55,31 +55,6 @@ public class EntrenadorDAO {
     }
 
     /**
-     * Versión que devuelve una lista con todos los entrenadores almacenados en la
-     * tabla Entrenador de la base de datos.
-     *
-     * @return lista con todos los objetos Entrenador registrados
-     */
-    public List<Entrenador> listarTodos() {
-        List<Entrenador> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Entrenador";
-        try (Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-                lista.add(new Entrenador(
-                        rs.getString("dni"),
-                        rs.getString("nombre"),
-                        rs.getInt("edad")
-                ));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return lista;
-    }
-
-    /**
      * Método que recupera la lista de entrenadores vinculados a un equipo específico
      * realizando una consulta cruzada (JOIN) con la tabla asociativa Entrena.
      *
