@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import leaguemanager.DAO.CompeticionDAO;
 import leaguemanager.DAO.EquipoDAO;
 import leaguemanager.DAO.ParticipaDAO;
+import leaguemanager.model.Competicion;
 import leaguemanager.model.Equipo;
 import leaguemanager.utils.Utils;
 import java.time.LocalDate;
@@ -55,7 +56,7 @@ public class CrearEquipoController {
             return;
         }
 
-        leaguemanager.model.Competicion comp = CompeticionDAO.buscarPorNombre(nombreCompeticion);
+        Competicion comp = CompeticionDAO.buscarPorNombre(nombreCompeticion);
         if (comp != null) {
             int limiteMaximo = comp.getNumero_equipos();
             int actuales = comp.getEquipos().size();
